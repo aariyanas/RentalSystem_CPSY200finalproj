@@ -1,0 +1,65 @@
+﻿
+main {
+    text-align: center;
+}
+
+#container, .buttonContainer {
+    display: flex;
+}
+
+#container, #search, #addNedit, .buttonContainer, .saveRemoveClear, .radioOptionContainer {
+    justify-content: center;
+}
+
+.radioContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.inputRadio {
+    text-align: left;
+}
+
+.radioOptionContainer {
+    display: flex-column;
+    width: 90%;
+}
+
+    .radioOptionContainer button {
+        margin: 15px auto;
+    }
+
+    .radioOptionContainer select {
+        width: 85%;
+        height: 40px;
+    }
+
+    .radioOptionContainer input {
+        margin: 0 auto;
+        width: 80%
+    }
+
+    .radioOptionContainer form {
+        text-align: left;
+    }
+
+#search, #addNedit {
+    margin: 0 auto;
+    width: 75%;
+}
+
+#addNedit {
+    text-align: left;
+}
+
+.saveRemoveClear {
+    gap: 40px;
+}
+
+form {
+    margin: 15px 0;
+}
+
+.resultsHeader {
+    font-weight: bold;
+}

@@ -1,0 +1,127 @@
+﻿@page "/rental"
+
+
+<main>
+    <h1>Rental</h1><br>
+    <section id="container">
+        <section id="search">
+            <h2>Search Customer</h2>
+            <div class="radioContainer">
+                <form class="inputRadio">
+                    <input type="radio" id="radioID" name="radioOptions" value="customerID" check="@IsSelected("customerID")" @onchange="SelectRadio" />
+                    <label for="employeeID">Customer ID</label><br>
+                    <input type="radio" id="radioLast" name="radioOptions" value="custLastName" check="@IsSelected("custLastName")" @onchange="SelectRadio" />
+                    <label for="radioLast">Customer Last Name</label><br>
+                    <input type="radio" id="radioAll" name="radioOptions" value="displayAll" check="@IsSelected("displayAll")" @onchange="SelectRadio" />
+                    <label for="radioAll">Display All</label><br>
+                </form>
+            </div>
+            @if (radioSelection == "customerID")
+            {
+                <div class="radioOptionContainer">
+                    <form>
+                        <label for="customerId">Enter Customer ID:</label>
+                        <input type="text" id="employeeId" class="form-control">
+                    </form>
+                    <button class="btn btn-primary">Search</button>
+                    <br>
+                    <p class="resultsHeader">Results:</p>
+                    <select class="results">
+                        <option>result1</option>
+                    </select>
+                </div>
+            }
+            else if (radioSelection == "custLastName")
+            {
+                <div class="radioOptionContainer">
+                    <form>
+                        <label for="customerLast">Enter Customer Last Name:</label>
+                        <input type="text" id="employeeAll" class="form-control">
+                    </form>
+                    <button class="btn btn-primary">Search</button>
+                    <br>
+                    <p class="resultsHeader">Results:</p>
+                    <select class="results">
+                        <option>result1</option>
+                    </select>
+                </div>
+            }
+            else if (radioSelection == "displayAll")
+            {
+                <div class="radioOptionContainer">
+                    <button type="button" class="btn btn-primary">Display All</button>
+                    <p class="resultsHeader">Results:</p>
+                    <select class="results">
+                        <option>result1</option>
+                    </select>
+                </div>
+            }
+            else { }
+
+        </section>
+        <section id="addNedit">
+            <h3>Add, Edit or Remove Customer</h3>
+            <form>
+                <div>
+                    <label for="inputID">Customer ID:</label>
+                    <input id="inputID" type="text" class="form-control" placeholder="@customerID" @bind="customerID" />
+                </div>
+                <div>
+                    <label for="first">First Name:</label>
+                    <input id="first" type="text" class="form-control" placeholder="@firstName" @bind="firstName" />
+                </div>
+                <div>
+                    <label for="last">Last Name:</label>
+                    <input id="last" type="text" class="form-control" placeholder="@lastName" @bind="lastName" />
+                </div>
+                <div>
+                    <label for="phone">Phone Number (Format 123-123-1234):</label>
+                    <input id="phone" type="tel" class="form-control" placeholder="@phoneNumber" @bind="phoneNumber" />
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" class="form-control" placeholder="@email" @bind="email" />
+                </div>
+                <div>
+                    <label for="avail">Status:</label>
+                    <input id="avail" type="text" class="form-control" placeholder="@status" @bind="status" />
+                </div>
+            </form>
+            <div class="buttonContainer">
+                <div class="saveRemoveClear">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Remove</button>
+                    <button type="submit" class="btn btn-primary">Clear</button>
+                </div>
+            </div>
+        </section>
+    </section>
+</main>
+
+
+
+
+
+@code {
+    string radioSelection = "";
+    string customerID = "Customer ID";
+    string firstName = "First Name";
+    string lastName = "Laset Name";
+    string address = "Addrss";
+    string phoneNumber = "000-000-0000";
+    string email = "employee@mail.ca";
+    string status = "none";
+
+
+    void SelectRadio(ChangeEventArgs e)
+    {
+        radioSelection = e.Value.ToString();
+        StateHasChanged();
+    }
+
+    bool IsSelected(string option)
+    {
+        return radioSelection == option;
+    }
+}
+
