@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CPSY200RentalSystem.Components.Pages;
 using CPSY200RentalSystem.persistence;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace CPSY200RentalSystem.domain
@@ -28,7 +29,7 @@ namespace CPSY200RentalSystem.domain
 
         public Customer()
         {
-            
+
         }
 
         public Customer(string customer_id, string last_name, string first_name, string contact_phone, string email, string status)
@@ -52,6 +53,12 @@ namespace CPSY200RentalSystem.domain
 
             string newCustomerID = (int.Parse(lastCustomerID) + 1).ToString();
             return newCustomerID;
+        }
+
+        //.csv format
+        public override string ToString()
+        {
+            return $"{Customer_id},{Last_name},{First_name},{Contact_phone},{Email},{Status}";
         }
     }
 }

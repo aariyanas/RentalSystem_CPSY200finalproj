@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CPSY200RentalSystem.persistence;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace CPSY200RentalSystem.domain
@@ -26,7 +27,7 @@ namespace CPSY200RentalSystem.domain
 
         public Equipment()
         {
-             
+
         }
         public Equipment(string equipment_id, string category_id, string name, string description, double daily_rate, int stockLevel)
         {
@@ -54,6 +55,12 @@ namespace CPSY200RentalSystem.domain
             int equipmentId = equipmentIds.Max();
             string newEquipmentID = (equipmentId + 1).ToString();
             return newEquipmentID;
+        }
+
+        //.csv format
+        public override string ToString()
+        {
+            return $"{Equipment_id},{Category_id},{Name},{Description},{Daily_rate},{StockLevel}";
         }
     }
 }

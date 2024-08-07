@@ -50,5 +50,11 @@ namespace CPSY200RentalSystem.domain
             string newRentalID = (int.Parse(lastRentalID) + 1).ToString();
             return newRentalID;
         }
+
+        //.csv format
+        public override string ToString()
+        {
+            return $"{Rental_id},{Date},{Customer},{Equipment},{Rental_date},{Return_date},{Cost}";
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace CPSY200RentalSystem.domain
             FileController.PopulateLists();
         }
 
-        public static void CreateEquipment(int category_id, string name, string description, double daily_rate, int stockLevel)
+        public static void CreateEquipment(string category_id, string name, string description, double daily_rate, int stockLevel)
         {
             string equipment_id = Equipment.GenerateEquipmentID(category_id);
             Equipment equipment = new Equipment(equipment_id, category_id, name, description, daily_rate, stockLevel);
@@ -110,6 +110,7 @@ namespace CPSY200RentalSystem.domain
         {
 
         }
+
         public static bool CheckAvailabilty(Equipment equipment)
         {
             if (equipment.StockLevel > 0)
@@ -121,7 +122,6 @@ namespace CPSY200RentalSystem.domain
             { 
                 return false;
             }
-
         }
 
         public static Equipment SelectEquipment(string code)
@@ -132,6 +132,12 @@ namespace CPSY200RentalSystem.domain
         public static Customer GetCustomerViaCode(string code)
         {
             return Customers.FirstOrDefault(p => p.Customer_id == code);
+        }
+
+        //.csv format
+        public override string ToString()
+        {
+            return $"{ListOfEquipment},{Customers},{Rentals},{Categories}";
         }
     }
 }
