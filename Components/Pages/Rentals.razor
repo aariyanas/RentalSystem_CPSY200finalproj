@@ -29,7 +29,7 @@
                             <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
                             <input type="text" id="employeeId" class="form-control" @bind="custIdInput">
                         </form>
-                        <button class="btn btn-primary" @onclick="() => DisplayRental(custIdInput, notUsedString)">Search</button>
+                        <button class="btn btn-primary" @onclick="() => DisplayRental(custIdInput, notUsed)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
                         <select class="results">
@@ -44,7 +44,7 @@
                             <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
                             <input type="text" id="employeeAll" class="form-control" @bind="custLastInput">
                         </form>
-                        <button class="btn btn-primary" @onclick="() => DisplayRental(notUsedInt, custLastInput)">Search</button>
+                        <button class="btn btn-primary" @onclick="() => DisplayRental(notUsed, custLastInput)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
                         <select class="results">
@@ -134,7 +134,7 @@
     List<Customer> customerList = RentalSystem.Customers;
     List<Rental> rentalList = RentalSystem.Rentals;
 
-    List<Rental> displayRentals = new List<Rental>(); // stores rentals that match the search 
+    List<Rental> displayRentals = new List<Rental>(); // stores rentals that match the search
 
     // Menu variables
     string radioSelection = "";
@@ -146,7 +146,7 @@
     string returnDate = "";
     string totalCost = "";
 
-    int custIdInput;
+    string custIdInput;
     string custLastInput;
     string notUsed = "none";
 
@@ -191,18 +191,18 @@
         selectedRentalId = e.Value.ToString();
         if (selectedRentalId != null)
         {
-            selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
-            Code = selectedRental.Code;
-             = selectedRental.; // 
-             = selectedRental.;
-             = selectedRental.;
-             = selectedRental.Cost;
+         selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
+        //ERROR - COMMENTED OUT FOR NOW
+         // Code = selectedRental.Code = selectedRental
+        // = selectedRental
+        // = selectedRental
+         //= selectedRental.Cost;
         }
     }
 
-    void DisplayRental(int customerID, string lastName) 
+    void DisplayRental(string customerID, string lastName)
     {
-        if (customerID != 0)
+        if (int.Parse(customerID) != 0)
         {
 
         }

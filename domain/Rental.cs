@@ -56,5 +56,15 @@ namespace CPSY200RentalSystem.domain
         {
             return $"{Rental_id},{Date},{Customer},{Equipment},{Rental_date},{Return_date},{Cost}";
         }
+
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
