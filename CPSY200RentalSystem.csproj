@@ -66,8 +66,7 @@
 
     <ItemGroup>
       <Folder Include="appGUI\" />
-      <Folder Include="domain\" />
-      <Folder Include="persistence\" />
+      <Folder Include="Resources\Res\" />
     </ItemGroup>
 
 </Project>
