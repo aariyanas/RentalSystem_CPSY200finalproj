@@ -63,3 +63,20 @@ form {
 .resultsHeader {
     font-weight: bold;
 }
+#customerIDSection {
+    margin-left: 38px;
+}
+
+#inputID {
+    background-color: gray;
+}
+
+#customerLastSection {
+    margin-left: 38px;
+}
+#StatusSection {
+    margin-top: 20px;
+}
+#SectionTitle {
+    font-weight: bold;
+}

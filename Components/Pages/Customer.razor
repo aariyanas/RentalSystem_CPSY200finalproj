@@ -1,10 +1,11 @@
 ﻿@page "/customer"
 
 <main>
-    <h1>Customer</h1><br>
+    <h3>Manage Customer</h3><br>
     <section id="container">
         <section id="search">
-            <h2>Search Customer</h2>
+            <h5 id="SectionTitle">Search Customer</h5>
+            <p>Select type of search to be performed</p>
             <div class="radioContainer">
                 <form class="inputRadio">
                     <input type="radio" id="radioID" name="radioOptions" value="customerID" check="@IsSelected("customerID")" @onchange="SelectRadio" />
@@ -19,14 +20,15 @@
             {
                 <div class="radioOptionContainer">
                     <form>
-                        <label for="customerId">Enter Customer ID:</label>
+                        <label id="customerIDSection" for="customerId">Enter Customer ID:</label>
                         <input type="text" id="employeeId" class="form-control">
                     </form>
                     <button class="btn btn-primary">Search</button>
+                    <button class="btn btn-primary">Clear</button>
                     <br>
                     <p class="resultsHeader">Results:</p>
                     <select class="results">
-                        <option>result1</option>
+                        <option>Test Result1</option>
                     </select>
                 </div>
             }
@@ -34,14 +36,15 @@
             {
                 <div class="radioOptionContainer">
                     <form>
-                        <label for="customerLast">Enter Customer Last Name:</label>
+                        <label for="customerLast" id="customerLastSection">Enter Last Name:</label>
                         <input type="text" id="employeeAll" class="form-control">
                     </form>
                     <button class="btn btn-primary">Search</button>
+                    <button class="btn btn-primary">Clear</button>
                     <br>
                     <p class="resultsHeader">Results:</p>
                     <select class="results">
-                        <option>result1</option>
+                        <option>Test Result1</option>
                     </select>
                 </div>
             }
@@ -51,7 +54,7 @@
                     <button type="button" class="btn btn-primary">Display All</button>
                     <p class="resultsHeader">Results:</p>
                     <select class="results">
-                        <option>result1</option>
+                        <option>Test Result1</option>
                     </select>
                 </div>
             }
@@ -59,37 +62,46 @@
 
         </section>
         <section id="addNedit">
-            <h3>Add, Edit or Remove Customer</h3>
+            <h5 id="SectionTitle">Customer Details</h5>
+            <p>Add, Update or Delete Customer</p>
             <form>
                 <div>
                     <label for="inputID">Customer ID:</label>
-                    <input id="inputID" type="text" class="form-control" placeholder="@customerID" @bind="customerID" />
+                    <input id="inputID" type="text" class="form-control" disabled />
                 </div>
                 <div>
                     <label for="first">First Name:</label>
-                    <input id="first" type="text" class="form-control" placeholder="@firstName" @bind="firstName" />
+                    <input id="first" type="text" class="form-control" @bind="firstName" />
                 </div>
                 <div>
                     <label for="last">Last Name:</label>
-                    <input id="last" type="text" class="form-control" placeholder="@lastName" @bind="lastName" />
+                    <input id="last" type="text" class="form-control" @bind="lastName" />
                 </div>
                 <div>
                     <label for="phone">Phone Number (Format 123-123-1234):</label>
-                    <input id="phone" type="tel" class="form-control" placeholder="@phoneNumber" @bind="phoneNumber" />
+                    <input id="phone" type="tel" class="form-control"@bind="phoneNumber" />
                 </div>
                 <div>
                     <label for="email">Email:</label>
-                    <input id="email" type="email" class="form-control" placeholder="@email" @bind="email" />
+                    <input id="email" type="email" class="form-control" @bind="email" />
                 </div>
                 <div>
-                    <label for="avail">Status:</label>
-                    <input id="avail" type="text" class="form-control" placeholder="@status" @bind="status" />
+                    <label for="avail" id="StatusSection">Status:</label>
+                    @* <input id="avail" type="text" class="form-control" placeholder="@status" @bind="status" /> *@
+                    <select>
+                        <option></option>
+                        <option>Active</option>
+                        <option>Banned</option>
+                        @* @foreach (Airport air in airports)
+                        {
+                            <option value="@air.Code">@air.Code - @air.Name</option>
+                        } *@
+                    </select>
                 </div>
             </form>
             <div class="buttonContainer">
                 <div class="saveRemoveClear">
                     <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="submit" class="btn btn-primary">Remove</button>
                     <button type="submit" class="btn btn-primary">Clear</button>
                 </div>
             </div>
@@ -105,7 +117,7 @@
     string radioSelection = "";
     string customerID = "Customer ID";
     string firstName = "First Name";
-    string lastName = "Laset Name";
+    string lastName = "Last Name";
     string address = "Addrss";
     string phoneNumber = "000-000-0000";
     string email = "employee@mail.ca";
