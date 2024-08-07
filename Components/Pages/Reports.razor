@@ -21,20 +21,22 @@
 
 @code {
     public string selectedReportToGen;
+    public List<Rental> listToDisplay;
 
     public string GenerateReport(selectedReportToGen)
     {
         if (selectedReportToGen == "Rentals by Customer")
         {
-
+            listToDisplay = RentalSystem.ReportSalesByCust(selectedReportToGen);
         }
         else if (selectedReportToGen == "Rentals by Date")
         {
-
+            listToDisplay = RentalSystem.ReportSalesByDate(selectedReportToGen);
         }
         else if (selecteddReportToGen == "List Equipment by Category")
         {
-
+            listToDisplay = RentalSystem.ReportItemsByCategory(selectedReportToGen);
         }
+        this.Display(listToDisplay);
     }
 }
