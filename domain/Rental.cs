@@ -10,7 +10,7 @@ namespace CPSY200RentalSystem.domain
 {
     public class Rental
     {
-        private int rental_id;
+        private string rental_id;
         private string date;
         private Customer customer;
         private Equipment equipment;
@@ -19,7 +19,7 @@ namespace CPSY200RentalSystem.domain
         private double cost;
 
         //not in our class diagram to have accessers and modifiers for this class so might not need?
-        public int Rental_id { get => rental_id; set => rental_id = value; }
+        public string Rental_id { get => rental_id; set => rental_id = value; }
         public string Date { get => date; set => date = value; }
         public Customer Customer { get => customer; set => customer = value; }
         public Equipment Equipment { get => equipment; set => equipment = value; }
@@ -32,7 +32,7 @@ namespace CPSY200RentalSystem.domain
         {
              
         }
-        public Rental(int rental_id, string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
+        public Rental(string rental_id, string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
         {
             this.Rental_id = rental_id;
             this.Date = date;
@@ -43,11 +43,11 @@ namespace CPSY200RentalSystem.domain
             this.Cost = cost;
         }
 
-        public static int GenerateRentalID()
+        public static string GenerateRentalID()
         {
-            int lastRentalID = RentalSystem.Rentals.Last().Rental_id;
+            string lastRentalID = RentalSystem.Rentals.Last().Rental_id;
 
-            int newRentalID = lastRentalID + 1;
+            string newRentalID = (int.Parse(lastRentalID) + 1).ToString();
             return newRentalID;
         }
     }

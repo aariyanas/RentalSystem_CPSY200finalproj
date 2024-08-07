@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using CPSY200RentalSystem.domain;
-using Intents;
 using Microsoft.Maui.ApplicationModel.Communication;
 
 
@@ -34,7 +33,7 @@ namespace CPSY200RentalSystem.persistence
                     foreach (string line in File.ReadAllLines(equipmentFilePath))
                     {
                         string[] parts = line.Split(",");
-                        equipment1 = new Equipment(int.Parse(parts[0]), int.Parse(parts[1]), parts[2], parts[3], double.Parse(parts[5]), int.Parse(parts[5]));
+                        equipment1 = new Equipment(parts[0], parts[1], parts[2], parts[3], double.Parse(parts[5]), int.Parse(parts[5]));
                         equipmentFromFile.Add(int.Parse(parts[0]), equipment1);
                     }
                 }
@@ -52,7 +51,7 @@ namespace CPSY200RentalSystem.persistence
                     foreach (string line in File.ReadAllLines(customersFilePath))
                     {
                         string[] parts = line.Split(",");
-                        customer1 = new Customer(int.Parse(parts[0]), parts[1], parts[2], parts[3], parts[4], parts[5]);
+                        customer1 = new Customer(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                         customersFromFile.Add(int.Parse(parts[0]), customer1);
                     }
                 }
@@ -72,10 +71,10 @@ namespace CPSY200RentalSystem.persistence
                     foreach (string line in File.ReadAllLines(rentalFilePath))
                     {
                         string[] parts = line.Split(",");
-                        equipment = RentalSystem.SelectEquipment(int.Parse(parts[2]));
-                        customer = RentalSystem.GetCustomerViaCode(int.Parse(parts[3]));
+                        equipment = RentalSystem.SelectEquipment(parts[2]);
+                        customer = RentalSystem.GetCustomerViaCode(parts[3]);
 
-                        rental1 = new Rental(int.Parse(parts[0]), parts[1], customer, equipment, parts[4], parts[5], double.Parse(parts[6]));
+                        rental1 = new Rental(parts[0], parts[1], customer, equipment, parts[4], parts[5], double.Parse(parts[6]));
                         rentalsFromFile.Add(int.Parse(parts[0]), rental1);
                     }
                 }
@@ -143,7 +142,7 @@ namespace CPSY200RentalSystem.persistence
             List<string> saveToFile = new List<string>();
             foreach (KeyValuePair<int, string> kvp in RentalSystem.Categories)
             {
-                saveToFile.Add($"{kvp.Key}, {kvp.Value}");
+                saveToFile.Add($"{kvp.Key},{kvp.Value}");
             }
             File.WriteAllLines(categoryFilePath, saveToFile);
         }

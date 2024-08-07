@@ -11,14 +11,14 @@ namespace CPSY200RentalSystem.domain
 {
     public class Customer
     {
-        private int customer_id;
+        private string customer_id;
         private string last_name;
         private string first_name;
         private string contact_phone;
         private string email;
         private string status;
 
-        public int Customer_id { get => customer_id; set => customer_id = value; }
+        public string Customer_id { get => customer_id; set => customer_id = value; }
         public string Last_name { get => last_name; set => last_name = value; }
         public string First_name { get => first_name; set => first_name = value; }
 
@@ -31,7 +31,7 @@ namespace CPSY200RentalSystem.domain
             
         }
 
-        public Customer(int customer_id, string last_name, string first_name, string contact_phone, string email, string status)
+        public Customer(string customer_id, string last_name, string first_name, string contact_phone, string email, string status)
         {
             this.Customer_id = customer_id;
             this.Last_name = last_name;
@@ -46,11 +46,11 @@ namespace CPSY200RentalSystem.domain
 
         }
 
-        public static int GenerateCustomerID()
+        public static string GenerateCustomerID()
         {
-            int lastCustomerID = RentalSystem.Customers.Last().Customer_id;
+            string lastCustomerID = RentalSystem.Customers.Last().Customer_id;
 
-            int newCustomerID = lastCustomerID + 1;
+            string newCustomerID = (int.Parse(lastCustomerID) + 1).ToString();
             return newCustomerID;
         }
     }

@@ -1,5 +1,7 @@
 ﻿
 main {
+    display: flex-column;
+    justify-content: center;
     text-align: center;
 
 }
@@ -10,6 +12,10 @@ main {
 
 #container, #search, #addNedit, .buttonContainer, .saveRemoveClear, .radioOptionContainer {
     justify-content: center;
+}
+
+#container {
+    margin-top: 20px;
 }
 
 .radioContainer {
@@ -26,23 +32,23 @@ main {
     width: 90%;
 }
 
-    .radioOptionContainer button {
-        margin: 15px auto;
-    }
+.radioOptionContainer button {
+    margin: 15px auto;
+}
 
-    .radioOptionContainer select {
-        width: 85%;
-        height: 40px;
-    }
+.radioOptionContainer select {
+    width: 85%;
+    height: 40px;
+}
 
-    .radioOptionContainer input {
-        margin: 0 auto;
-        width: 80%
-    }
+.radioOptionContainer input {
+    margin: 0 auto;
+    width: 80%
+}
 
-    .radioOptionContainer form {
-        text-align: left;
-    }
+.radioOptionContainer form {
+    text-align: left;
+}
 
 #search, #addNedit {
     margin: 0 auto;

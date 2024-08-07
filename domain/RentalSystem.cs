@@ -28,21 +28,21 @@ namespace CPSY200RentalSystem.domain
 
         public static void CreateEquipment(int category_id, string name, string description, double daily_rate, int stockLevel)
         {
-            int equipment_id = Equipment.GenerateEquipmentID(category_id);
+            string equipment_id = Equipment.GenerateEquipmentID(category_id);
             Equipment equipment = new Equipment(equipment_id, category_id, name, description, daily_rate, stockLevel);
             ListOfEquipment.Add(equipment);
             // probably should save here  or in maui
         }
         public static void CreateCustomer(string last_name, string first_name, string contact_phone, string email, string status)
         {
-            int customer_id = Customer.GenerateCustomerID();
+            string customer_id = Customer.GenerateCustomerID();
             Customer customer = new Customer(customer_id, last_name, first_name, contact_phone, email, status);
             Customers.Add(customer);
             // probably should save here or in maui
         }
         public static void CreateRental(string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
         {
-            int rental_id = Rental.GenerateRentalID();
+            string rental_id = Rental.GenerateRentalID();
             Rental rental = new Rental(rental_id, date, customer, equipment, rental_date, return_date, cost);
             Rentals.Add(rental);
             // probably should save here  or in maui
@@ -54,7 +54,7 @@ namespace CPSY200RentalSystem.domain
 
         }
 
-        public static void RemoveEquipment(int equipment_id)
+        public static void RemoveEquipment(string equipment_id)
         {
             Equipment equipment = ListOfEquipment.Where(e => e.Equipment_id == equipment_id).FirstOrDefault();
             ListOfEquipment.Remove(equipment);
@@ -65,7 +65,7 @@ namespace CPSY200RentalSystem.domain
             // this might be better in maui
         }
 
-        public static List<Equipment> ReportItemsByCategory(int category_id)
+        public static List<Equipment> ReportItemsByCategory(string category_id)
         {
             List<Equipment> equipmentByCategory = new List<Equipment>();
             equipmentByCategory = ListOfEquipment.Where(e => e.Category_id == category_id).ToList();
@@ -124,12 +124,12 @@ namespace CPSY200RentalSystem.domain
 
         }
 
-        public static Equipment SelectEquipment(int code)
+        public static Equipment SelectEquipment(string code)
         {
             return ListOfEquipment.FirstOrDefault(p => p.Equipment_id == code);
         }
 
-        public static Customer GetCustomerViaCode(int code)
+        public static Customer GetCustomerViaCode(string code)
         {
             return Customers.FirstOrDefault(p => p.Customer_id == code);
         }

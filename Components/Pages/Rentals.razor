@@ -1,7 +1,9 @@
-﻿@page "/rental"
+﻿@page "/rentals"
+@using CPSY200RentalSystem.domain
+@using CPSY200RentalSystem.persistence
 
 <main>
-    <h3 id="mainTitle">Manage Inventory</h3><br>
+    <h3 id="mainTitle">Manage Rentals</h3><br>
     <button type="button" id="EQCAT1" @onclick="SwitchView" class="btn btn-primary btn-block">Create</button>
     <button type="button" id="EQCAT2" @onclick="SwitchView" class="btn btn-primary btn-block">Update</button>
     @if (menuButton == "updateRental")
@@ -25,9 +27,9 @@
                     <div class="radioOptionContainer">
                         <form>
                             <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
-                            <input type="text" id="employeeId" class="form-control">
+                            <input type="text" id="employeeId" class="form-control" @bind="custIdInput">
                         </form>
-                        <button class="btn btn-primary">Search</button>
+                        <button class="btn btn-primary" @onclick="() => DisplayRental(custIdInput, notUsedString)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
                         <select class="results">
@@ -40,9 +42,9 @@
                     <div class="radioOptionContainer">
                         <form>
                             <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
-                            <input type="text" id="employeeAll" class="form-control">
+                            <input type="text" id="employeeAll" class="form-control" @bind="custLastInput">
                         </form>
-                        <button class="btn btn-primary">Search</button>
+                        <button class="btn btn-primary" @onclick="() => DisplayRental(notUsedInt, custLastInput)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
                         <select class="results">
@@ -54,8 +56,11 @@
                 {
                     <div class="radioOptionContainer">
                         <p class="resultsHeader">Results:</p>
-                        <select class="results">
-                            <option>result1</option>
+                        <select class="results" @onchange="SelectRental">
+                            @foreach (Rental rental in rentalList)
+                            {
+                                <option value="@rental.Rental_id">Rental ID: @rental.Rental_id -- Customer: @rental.Customer.First_name[0].@rental.Customer.Last_name -- @rental.Equipment.Name</option>
+                            }
                         </select>
                     </div>
                 }
@@ -63,7 +68,7 @@
 
             </section>
             <section id="addNedit">
-                <h5 id="SectionTitle">Inventory Details</h5>
+                <h5 id="SectionTitle">Rental Details</h5>
                 <p>Add, Update or Delete Inventory</p>
                 <form>
                     <div>
@@ -124,15 +129,30 @@
 
 
 @code {
+    RentalSystem rentalSystem = new RentalSystem();
+    List<Equipment> equipmentList = RentalSystem.ListOfEquipment;
+    List<Customer> customerList = RentalSystem.Customers;
+    List<Rental> rentalList = RentalSystem.Rentals;
+
+    List<Rental> displayRentals = new List<Rental>(); // stores rentals that match the search 
+
+    // Menu variables
     string radioSelection = "";
     string buttonSelection = "";
-    string customerID = "Customer ID";
-    string firstName = "First Name";
-    string lastName = "Laset Name";
-    string address = "Addrss";
-    string phoneNumber = "000-000-0000";
-    string email = "employee@mail.ca";
-    string status = "none";
+    string rentalId = "";
+    string currentDate = "";
+    string customerId = "";
+    string rentalDate = "";
+    string returnDate = "";
+    string totalCost = "";
+
+    int custIdInput;
+    string custLastInput;
+    string notUsed = "none";
+
+    string selectedRentalId;
+    Rental selectedRental;
+
 
     void SelectRadio(ChangeEventArgs e)
     {
@@ -164,6 +184,33 @@
         {
             menuButton = "updateRental";
         }
+    }
+
+    void SelectRental(ChangeEventArgs e)
+    {
+        selectedRentalId = e.Value.ToString();
+        if (selectedRentalId != null)
+        {
+            selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
+            Code = selectedRental.Code;
+             = selectedRental.; // 
+             = selectedRental.;
+             = selectedRental.;
+             = selectedRental.Cost;
+        }
+    }
+
+    void DisplayRental(int customerID, string lastName) 
+    {
+        if (customerID != 0)
+        {
+
+        }
+        else if (lastName != "none")
+        {
+
+        }
+        else { }
     }
 }
 

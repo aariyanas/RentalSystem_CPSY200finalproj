@@ -10,15 +10,15 @@ namespace CPSY200RentalSystem.domain
 {
     public class Equipment
     {
-        private int equipment_id;
-        private int category_id;
+        private string equipment_id;
+        private string category_id;
         private string name;
         private string description;
         private double daily_rate;
         private int stockLevel;    // Changed to stockLevel so we can use the CheckAvailability Method in the RentalSystem to check whether this attribute is >0
 
-        public int Equipment_id { get => equipment_id; set => equipment_id = value; }
-        public int Category_id { get => category_id; set => category_id = value; }
+        public string Equipment_id { get => equipment_id; set => equipment_id = value; }
+        public string Category_id { get => category_id; set => category_id = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
         public double Daily_rate { get => daily_rate; set => daily_rate = value; }
@@ -28,7 +28,7 @@ namespace CPSY200RentalSystem.domain
         {
              
         }
-        public Equipment(int equipment_id, int category_id, string name, string description, double daily_rate, int stockLevel)
+        public Equipment(string equipment_id, string category_id, string name, string description, double daily_rate, int stockLevel)
         {
             this.Equipment_id = equipment_id;
             this.Category_id = category_id;
@@ -43,13 +43,17 @@ namespace CPSY200RentalSystem.domain
 
         }
 
-        public static int GenerateEquipmentID(int category_id)
+        public static string GenerateEquipmentID(string category_id)
         {
-            string category_idString = category_id.ToString();
-            char startingNumberString = category_idString[0];
-            int startingNumber = (int)startingNumberString;
-            int newID = startingNumber*100 + 2; // probably have to change the IDs to string to make ID generation easier since the Id corresponding with the starting number of the category id
-            return newID;
+            List<Equipment> matchingEquipment = RentalSystem.ListOfEquipment.Where(e => e.Category_id == category_id).ToList();
+            List<int> equipmentIds = new List<int>();
+            foreach (Equipment equipment in matchingEquipment)
+            {
+                equipmentIds.Add(int.Parse(equipment.Equipment_id));
+            }
+            int equipmentId = equipmentIds.Max();
+            string newEquipmentID = (equipmentId + 1).ToString();
+            return newEquipmentID;
         }
     }
 }
