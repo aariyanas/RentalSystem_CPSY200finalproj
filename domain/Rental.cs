@@ -32,7 +32,7 @@ namespace CPSY200RentalSystem.domain
         {
              
         }
-        public Rental(short rental_id, string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
+        public Rental(int rental_id, string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
         {
             this.Rental_id = rental_id;
             this.Date = date;
@@ -43,9 +43,12 @@ namespace CPSY200RentalSystem.domain
             this.Cost = cost;
         }
 
-        public static void GenerateRentalID()
+        public static int GenerateRentalID()
         {
+            int lastRentalID = RentalSystem.Rentals.Last().Rental_id;
 
+            int newRentalID = lastRentalID + 1;
+            return newRentalID;
         }
     }
 }
