@@ -2,10 +2,39 @@
 @using CPSY200RentalSystem.domain
 @using CPSY200RentalSystem.persistence
 
-<h1>Reports</h1>
 
+<main>
+    <h3 id="mainTitle">Reports</h3>
+    <br />
+    <section id="container">
+        <h5><strong>Select Type of Report</strong></h5>
+        <select @bind="selectedReportToGen" name="Reports" id="ReportTypeSelector" class="results">
+            <option>Rentals by Customer</option>
+            <option>Rentals by Date</option>
+            <option>List Equipment by Category</option>
+        </select>
+        <br />
+        <button class="btn btn-primary" @onclick="GenerateReport">Generate Report</button>
+    </section>
+</main>
 
 
 @code {
-    
+    public string selectedReportToGen;
+
+    public string GenerateReport(selectedReportToGen)
+    {
+        if (selectedReportToGen == "Rentals by Customer")
+        {
+
+        }
+        else if (selectedReportToGen == "Rentals by Date")
+        {
+
+        }
+        else if (selecteddReportToGen == "List Equipment by Category")
+        {
+
+        }
+    }
 }
