@@ -1,16 +1,19 @@
 ﻿@page "/inventory"
 
 <main>
-    <h1>Inventory</h1><br>
+@*     <h3 id="mainTitle">Manage Inventory</h3><br> *@
+    <button type="submit" id="EQCAT1" class="btn btn-primary">Equipment</button>
+    <button type="submit" id="EQCAT2" class="btn btn-primary">Categories</button>
     <section id="container">
         <section id="search">
-            <h2>Search Customer</h2>
+            <h5 id="SectionTitle">Search Inventory</h5>
+            <p>Select type of search to be performed</p>
             <div class="radioContainer">
                 <form class="inputRadio">
                     <input type="radio" id="radioID" name="radioOptions" value="customerID" check="@IsSelected("customerID")" @onchange="SelectRadio" />
-                    <label for="employeeID">Customer ID</label><br>
+                    <label for="employeeID">Equipment ID</label><br>
                     <input type="radio" id="radioLast" name="radioOptions" value="custLastName" check="@IsSelected("custLastName")" @onchange="SelectRadio" />
-                    <label for="radioLast">Customer Last Name</label><br>
+                    <label for="radioLast">Category ID</label><br>
                     <input type="radio" id="radioAll" name="radioOptions" value="displayAll" check="@IsSelected("displayAll")" @onchange="SelectRadio" />
                     <label for="radioAll">Display All</label><br>
                 </form>
@@ -19,7 +22,7 @@
             {
                 <div class="radioOptionContainer">
                     <form>
-                        <label for="employeeId">Enter Employee ID:</label>
+                        <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
                         <input type="text" id="employeeId" class="form-control">
                     </form>
                     <button class="btn btn-primary">Search</button>
@@ -34,7 +37,7 @@
             {
                 <div class="radioOptionContainer">
                     <form>
-                        <label for="employeeLast">Enter Employee Last Name:</label>
+                        <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
                         <input type="text" id="employeeAll" class="form-control">
                     </form>
                     <button class="btn btn-primary">Search</button>
@@ -48,14 +51,6 @@
             else if (radioSelection == "displayAll")
             {
                 <div class="radioOptionContainer">
-                    <form>
-                        <label for="employeeType">Select Employee Type:</label>
-                        <select>
-                            <option>Host</option>
-                            <option>Server</option>
-                            <option>Kitchen</option>
-                        </select>
-                    </form>
                     <p class="resultsHeader">Results:</p>
                     <select class="results">
                         <option>result1</option>
@@ -66,38 +61,34 @@
 
         </section>
         <section id="addNedit">
-            <h3>Add, Edit or Remove Customer</h3>
+            <h5 id="SectionTitle">Inventory Details</h5>
+            <p>Add, Update or Delete Inventory</p>
             <form>
                 <div>
-                    <label for="inputID">Customer ID:</label>
+                    <label for="inputID">Equipment ID:</label>
                     <input id="inputID" type="text" class="form-control" placeholder="@customerID" @bind="customerID" />
                 </div>
                 <div>
-                    <label for="first">First Name:</label>
+                    <label for="first">Category:</label>
                     <input id="first" type="text" class="form-control" placeholder="@firstName" @bind="firstName" />
                 </div>
                 <div>
-                    <label for="last">Last Name:</label>
+                    <label for="last">Name:</label>
                     <input id="last" type="text" class="form-control" placeholder="@lastName" @bind="lastName" />
                 </div>
                 <div>
-                    <label for="phone">Phone Number (Format 123-123-1234):</label>
-                    <input id="phone" type="tel" class="form-control" placeholder="@phoneNumber" @bind="phoneNumber" />
+                    <label for="phone">Description:</label>
+                    <textarea id="phone" type="textarea" class="form-control" />
                 </div>
                 <div>
-                    <label for="email">Email:</label>
-                    <input id="email" type="email" class="form-control" placeholder="@email" @bind="email" />
-                </div>
-                <div>
-                    <label for="avail">Status:</label>
-                    <input id="avail" type="text" class="form-control" placeholder="@status" @bind="status" />
+                    <label for="email">Daily Rental Cost:</label>
+                    <input id="email" type="number" class="form-control" placeholder="$" />
                 </div>
             </form>
             <div class="buttonContainer">
                 <div class="saveRemoveClear">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="submit" class="btn btn-primary">Remove</button>
-                    <button type="submit" class="btn btn-primary">Clear</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
                 </div>
             </div>
         </section>
@@ -112,7 +103,7 @@
     string radioSelection = "";
     string customerID = "Customer ID";
     string firstName = "First Name";
-    string lastName = "Laset Name";
+    string lastName = "Last Name";
     string address = "Addrss";
     string phoneNumber = "000-000-0000";
     string email = "employee@mail.ca";
