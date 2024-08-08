@@ -26,12 +26,12 @@ namespace CPSY200RentalSystem.domain
             FileController.PopulateLists();
         }
 
-        public static void CreateEquipment(string category_id, string name, string description, double daily_rate, int stockLevel)
+        public static Equipment CreateEquipment(string category_id, string name, string description, double daily_rate, int stockLevel)
         {
             string equipment_id = Equipment.GenerateEquipmentID(category_id);
             Equipment equipment = new Equipment(equipment_id, category_id, name, description, daily_rate, stockLevel);
             ListOfEquipment.Add(equipment);
-            // probably should save here  or in maui
+            return equipment;
         }
         public static Customer CreateCustomer(string last_name, string first_name, string contact_phone, string email)
         {
@@ -39,20 +39,17 @@ namespace CPSY200RentalSystem.domain
             Customer customer = new Customer(customer_id, last_name, first_name, contact_phone, email);
             Customers.Add(customer);
             return customer;
-            // probably should save here or in maui
         }
         public static void CreateRental(string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
         {
             string rental_id = Rental.GenerateRentalID();
             Rental rental = new Rental(rental_id, date, customer, equipment, rental_date, return_date, cost);
             Rentals.Add(rental);
-            // probably should save here  or in maui
         }
 
         public static void AddCategory(string category_id, string categoryName)
         {
             Categories.Add(category_id, categoryName);
-
         }
 
         public static void RemoveEquipment(string equipment_id)
@@ -61,28 +58,54 @@ namespace CPSY200RentalSystem.domain
             ListOfEquipment.Remove(equipment);
         }
 
-        public static void DisplayAll(string type)
+        public static Dictionary<Customer, List<Rental>> ReportSalesByCustomer()
         {
-            // this might be better in maui
+            Dictionary<Customer, List<Rental>> rentalsByCustomer = new Dictionary<Customer, List<Rental>>();
+            List<Rental> rentalPer = new List<Rental>();
+            foreach (Customer c in Customers)
+            {
+                rentalPer = Rentals.Where(r => r.Customer.Customer_id == c.Customer_id).ToList();
+                if (rentalPer != null)
+                {
+                    rentalsByCustomer.Add(c, rentalPer);
+                }
+            }
+            return rentalsByCustomer;
         }
-
-        public static List<Equipment> ReportItemsByCategory(string category_id)
+        
+        public static Dictionary<string, List<Rental>> ReportSalesByDate()
         {
-            List<Equipment> equipmentByCategory = new List<Equipment>();
-            equipmentByCategory = ListOfEquipment.Where(e => e.Category_id == category_id).ToList();
-            return equipmentByCategory;
-        }
-        public static List<Rental> ReportSalesByDate(string date)
-        {
-            List<Rental> rentalsByDate = new List<Rental>();
-            rentalsByDate = Rentals.Where(r => r.Return_date == date).ToList();
+            Dictionary<string, List<Rental>> rentalsByDate = new Dictionary<string, List<Rental>>();
+            List<Rental> rentalPer = new List<Rental>();
+            List<string> rentalDates = new List<string>();
+            foreach (Rental r in Rentals)
+            {
+                rentalDates.Add(r.Return_date);
+            }
+            foreach (string d in rentalDates)
+            {
+                rentalPer = Rentals.Where(r => r.Return_date == d).ToList();
+                if (rentalPer != null)
+                {
+                    rentalsByDate.Add(d, rentalPer);
+                }
+            }
             return rentalsByDate;
         }
-        public static List<Rental> ReportSalesByCust(Customer customer)
+
+        public static Dictionary<string, List<Equipment>> ReportEquipmentByCategory()
         {
-            List<Rental> rentalsByCustomer = new List<Rental>();
-            rentalsByCustomer = Rentals.Where(r => r.Customer.Customer_id == customer.Customer_id).ToList();
-            return rentalsByCustomer;
+            Dictionary<string, List<Equipment>> equipmentByCategory = new Dictionary<string, List<Equipment>>();
+            List<Equipment> equipmentPer = new List<Equipment>();
+            foreach (KeyValuePair<string, string> kvp in Categories)
+            {
+                equipmentPer = ListOfEquipment.Where(e => e.Category_id == kvp.Key).ToList();
+                if (equipmentPer != null)
+                {
+                    equipmentByCategory.Add(kvp.Key, equipmentPer);
+                }
+            }
+            return equipmentByCategory;
         }
 
         public static Customer CheckForCustomer(string first_name, string last_name, string contact_phone, string email)
@@ -100,16 +123,6 @@ namespace CPSY200RentalSystem.domain
             {
                 return CreateCustomer(last_name, first_name, contact_phone, email);
             }
-        }
-
-        public static void UpdateCustomer()
-        {
-
-        }
-
-        public static void UpdateRental()
-        {
-
         }
 
         public static bool CheckAvailabilty(Equipment equipment)

@@ -14,107 +14,133 @@
             <p>Select type of search to be performed</p>
             <div class="radioContainer">
                 <form class="inputRadio">
-                    <input type="radio" id="radioID" name="radioOptions" value="customerID" check="@IsSelected("customerID")" @onchange="SelectRadio" />
+                        <input type="radio" id="radioID" name="radioOptions" value="equipmentID" check="@IsSelected("equipmentID")" @onchange="SelectRadio" />
                     <label for="employeeID">Equipment ID</label><br>
-                    <input type="radio" id="radioLast" name="radioOptions" value="custLastName" check="@IsSelected("custLastName")" @onchange="SelectRadio" />
+                        <input type="radio" id="radioLast" name="radioOptions" value="categoryID" check="@IsSelected("categoryID")" @onchange="SelectRadio" />
                     <label for="radioLast">Category ID</label><br>
                     <input type="radio" id="radioAll" name="radioOptions" value="displayAll" check="@IsSelected("displayAll")" @onchange="SelectRadio" />
                     <label for="radioAll">Display All</label><br>
                 </form>
             </div>
-            @if (radioSelection == "customerID")
+                @if (radioSelection == "equipmentID")
             {
-                <div class="radioOptionContainer">
-                    <form>
-                        <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
-                        <input type="text" id="employeeId" class="form-control">
-                    </form>
-                    <button class="btn btn-primary">Search</button>
-                    <br>
-                    <p class="resultsHeader">Results:</p>
-                    <select class="results">
-                        <option>result1</option>
-                    </select>
-                </div>
+                    <div class="radioOptionContainer">
+                        <form>
+                            <label id="equipmentIDSection" for="equipmentIdInput">Enter Equipment ID:</label>
+                            <input type="text" id="equipmentIdInput" class="form-control" @bind="@equipIdInput">
+                        </form>
+                        <button class="btn btn-primary" @onclick="() => DisplayEquipment(equipIdInput, notUsed)">Search</button>  // change the multi parameter methods to sinlge and sort in method
+                        <br>
+                        <p class="resultsHeader">Results:</p>
+                        <select class="results" @onchange="SelectEquipment">
+                            <option value="none" selected></option>
+                            @foreach (Equipment equipment in foundEquipment)
+                            {
+                                <option value="@equipment.Equipment_id">@equipment.Name - @equipment.Equipment_id</option>
+                            }
+                        </select>
+                    </div>
             }
-            else if (radioSelection == "custLastName")
+                else if (radioSelection == "categoryID")
             {
-                <div class="radioOptionContainer">
-                    <form>
-                        <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
-                        <input type="text" id="employeeAll" class="form-control">
-                    </form>
-                    <button class="btn btn-primary">Search</button>
-                    <br>
-                    <p class="resultsHeader">Results:</p>
-                    <select class="results">
-                        <option>result1</option>
-                    </select>
-                </div>
+                    <div class="radioOptionContainer">
+                        <form>
+                            <label id="categoryIDSection" for="categoryIdInput">Enter Category ID:</label>
+                            <input type="text" id="categoryIdInput" class="form-control" @bind="@catIdInput">
+                        </form>
+                        <button class="btn btn-primary" @onclick="() => DisplayEquipment(notUsed, catIdInput)">Search</button>
+                        <br>
+                        <p class="resultsHeader">Results:</p>
+                        <select class="results" @onchange="SelectEquipment">
+                            <option value="none" selected></option>
+                            @foreach (Equipment equipment in foundEquipment)
+                            {
+                                <option value="@equipment.Equipment_id">@equipment.Name - @equipment.Equipment_id</option>
+                            }
+                        </select>
+                    </div>
             }
             else if (radioSelection == "displayAll")
             {
                 <div class="radioOptionContainer">
                     <p class="resultsHeader">Results:</p>
-                    <select class="results">
-                        <option>result1</option>
-                    </select>
+                        <select class="results" @onchange="SelectEquipment">
+                            <option value="none" selected></option>
+                            @foreach (Equipment equipment in equipmentList)
+                            {
+                                <option value="@equipment.Equipment_id">@equipment.Name - @equipment.Equipment_id</option>
+                            }
+                        </select>
                 </div>
             }
             else { }
 
         </section>
         <section id="addNedit">
-            <h5 id="SectionTitle">Inventory Details</h5>
-            <p>Add, Update or Delete Inventory</p>
+            <h5 id="SectionTitle">Equipment Details</h5>
+                <p>Add, Update or Delete Equipment</p>
             <form>
                 <div>
                     <label for="inputID">Equipment ID:</label>
-                    <input id="inputID" type="text" class="form-control"   />
+                        <input id="inputID" type="text" class="form-control" @bind="@equipmentID" disabled/>
+                </div>
+                    <div>
+                        <label for="category" id="categorySection">Category ID:</label>
+                        <select @onchange="SelectCategory">
+                            @if (categoryID != null && selectedEquipmentId != null)
+                            {
+                                <option value="@categoryID" selected>Current: @categoryID</option>
+                            }
+                            <option></option>
+                            @foreach (KeyValuePair<string, string> kvp in RentalSystem.Categories)
+                            {
+                                <option value="@kvp.Key">ID: @kvp.Key -- Name: @kvp.Value</option>
+                            }
+                        </select>
+                    </div>
+                <div>
+                    <label for="name">Name:</label>
+                        <input id="name" type="text" class="form-control" @bind="@equipmentName" />
                 </div>
                 <div>
-                    <label for="first">Category:</label>
-                    <input id="first" type="text" class="form-control" />
+                    <label for="description">Description:</label>
+                        <textarea id="description" type="textarea" class="form-control" @bind="@equipDescription" />
                 </div>
                 <div>
-                    <label for="last">Name:</label>
-                    <input id="last" type="text" class="form-control"  />
+                    <label for="dailyRate">Daily Rental Cost:</label>
+                        <input id="dailyRate" type="number" class="form-control" @bind="@equipDailyRate" />
                 </div>
                 <div>
-                    <label for="phone">Description:</label>
-                    <textarea id="phone" type="textarea" class="form-control" />
-                </div>
-                <div>
-                    <label for="email">Daily Rental Cost:</label>
-                    <input id="email" type="number" class="form-control" placeholder="$" />
+                    <label for="stockLevel">Stock Level:</label>
+                    <input id="stockLevel" type="number" class="form-control" @bind="@stockLevel" />
                 </div>
             </form>
             <div class="buttonContainer">
                 <div class="saveRemoveClear">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <button type="submit" class="btn btn-primary">Delete</button>
+                    <button type="submit" class="btn btn-primary" @onclick="SaveEquipment" >Save</button>
+                    <button type="submit" class="btn btn-primary" @onclick="DeleteEquipment">Delete</button>
                 </div>
             </div>
         </section>
-        </section>
+    </section>
     }
     else
     {
         <section id="addNedit">
-            <h5 id="SectionTitle">Add Category</h5>
+            <h3 id="SectionTitle">Add Category</h3>
             <form>
                 <div>
                     <label for="inputID2">Category ID:</label>
-                    <input id="inputID2" type="text" class="form-control" />
+                    <input id="inputID2" type="number" pattern="[6-9][0-9]" class="form-control" @bind="@addCategoryID" />
                 </div>
                 <div>
-                    <label for="first">Category Name:</label>
-                    <input id="first" type="text" class="form-control" />
+                    <label for="inputCategoryName">Category Name:</label>
+                    <input id="inputCategoryName" type="text" class="form-control" @bind="@addCategoryID" />
                 </div>
             </form>
-            <div class="buttonContainer">
-                <div class="saveRemoveClear">
-                    <button type="submit" class="btn btn-primary">Add</button>
+            <div class="saveRemoveClear">
+                <div class="saveCategory">
+                    <button type="submit" class="btn btn-primary" @onclick="AddCategory" >Add</button>
                 </div>
             </div>
         </section>
@@ -126,15 +152,49 @@
 
 
 @code {
+    RentalSystem rentalSystem = new RentalSystem();
+    List<Equipment> equipmentList = RentalSystem.ListOfEquipment;
+
+    List<Equipment> foundEquipment = new List<Equipment>();
+
+    // Page variables
+    string menuButton = "displayEquipment";
+    string saleButton = "inactive";
+
+    // Radio Selection Variables
     string radioSelection = "";
-    string buttonSelection = "";
-    string customerID = "Customer ID";
-    string firstName = "First Name";
-    string lastName = "Last Name";
-    string address = "Address";
-    string phoneNumber = "000-000-0000";
-    string email = "employee@mail.ca";
-    string status = "none";
+    string equipIdInput;
+    string catIdInput;
+    string notUsed = "none";
+    string selectedEquipmentId;
+
+    // Equipment Selection
+    string equipmentID = null;
+    string categoryID = null;
+    string equipmentName = null;
+    string equipDescription = null;
+    double equipDailyRate;
+    int stockLevel;
+
+    // Category Addtion Variables 
+    string addCategoryID = null;
+    string addCategoryName = null;
+
+    // Change Page  -- Probably going to need to fix this
+    public void SwitchView()
+    {
+        if (menuButton == "displayEquipment")
+        {
+            StateHasChanged();
+            menuButton = "displayCategory";
+        }
+        else if (menuButton == "displayCategory")
+        {
+            StateHasChanged();
+            menuButton = "displayEquipment";
+        }
+        else { }
+    }
 
 
     void SelectRadio(ChangeEventArgs e)
@@ -143,29 +203,99 @@
         StateHasChanged();
     }
 
-    void SelectButton(ChangeEventArgs e)
-    {
-        buttonSelection = e.Value.ToString();
-        StateHasChanged();
-    }
-
     bool IsSelected(string option)
     {
         return radioSelection == option;
     }
-    string menuButton = "displayEquipment";
-    string saleButton = "inactive";
 
-    public void SwitchView()
+
+    void DisplayEquipment(string equipmentID, string categoryID)
     {
-        if (menuButton == "displayEquipment")
+        if (equipmentID != "none")
         {
-            menuButton = "displayCategory";
+            foundEquipment = equipmentList.Where(e => e.Equipment_id == equipmentID).ToList();
         }
-        else
+        else if (categoryID != "none")
         {
-            menuButton = "displayEquipment";
+            foundEquipment = equipmentList.Where(e => e.Category_id == categoryID).ToList();
         }
+        else { }
+    }
+
+    // Customer and Customer Status Selection
+    void SelectEquipment(ChangeEventArgs e)
+    {
+        selectedEquipmentId = e.Value.ToString();
+        if (selectedEquipmentId != null && selectedEquipmentId != "none")
+        {
+            Equipment selectedEquipment = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+            equipmentID = selectedEquipment.Equipment_id;
+            categoryID = selectedEquipment.Category_id;
+            equipmentName = selectedEquipment.Name;
+            equipDescription = selectedEquipment.Description;
+            equipDailyRate = selectedEquipment.Daily_rate;
+            stockLevel = selectedEquipment.StockLevel;
+        }
+        else { }
+    }
+
+    void SelectCategory(ChangeEventArgs e)
+    {
+        categoryID = e.Value.ToString();
+
+    }
+
+    // Add or Update Equipment
+    void SaveEquipment()
+    {
+        if (selectedEquipmentId != null && selectedEquipmentId != "none")
+        {
+            Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+            if (selectedEquipement != null)
+            {   // Update Stock Level
+                int previousStock = selectedEquipement.StockLevel;
+                selectedEquipement.StockLevel = stockLevel;
+                FileController.Save();
+                Application.Current.MainPage.DisplayAlert("Stock Level Updated", $"Equipment: {selectedEquipement.Name} - ID: {selectedEquipement.Equipment_id}\nPrevious Stock Level: {previousStock}\nNew Stock Level: ${stockLevel}", "OK");
+            }
+            else {}
+
+        }
+        else if (selectedEquipmentId == null && categoryID != null && equipmentName != null && equipDescription != null && equipDailyRate > 0 && stockLevel > 0)
+        {
+            Equipment newEquipment = RentalSystem.CreateEquipment(categoryID, equipmentName, equipDescription, equipDailyRate, stockLevel);
+            FileController.Save();
+            Application.Current.MainPage.DisplayAlert("Equipment Added to Inventory", $"Equipment: {newEquipment.Name}\nID: {newEquipment.Equipment_id}\nDescription: {newEquipment.Description}\nDaily Rate: ${newEquipment.Daily_rate}\nStock Level: {newEquipment.StockLevel}", "OK");
+        }
+        else {}
+
+    }
+
+    // Delete Equipment
+    void DeleteEquipment()
+    {
+        if (selectedEquipmentId != null && selectedEquipmentId != "none")
+        {
+            Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+            if (selectedEquipement != null)
+            {
+                equipmentList.Remove(selectedEquipement);
+                string customerNotUsed = null; // Send the object to the RentalSystem.Remove Method and sort based on object type
+                string rentalNotUsed = null;
+                FileController.Delete(selectedEquipement.Equipment_id, customerNotUsed, rentalNotUsed);
+                FileController.Save();
+                Application.Current.MainPage.DisplayAlert("Equipment Deleted", "Press OK to Continue", "OK");
+            }
+            else { }
+        }
+        else { }
+    }
+
+    void AddCategory()
+    {
+        RentalSystem.AddCategory(addCategoryID, addCategoryName);
+        FileController.Save();
+        Application.Current.MainPage.DisplayAlert("Category Added", $"Category: {addCategoryName}\nCategory ID: {addCategoryID}", "OK");
     }
 }
 

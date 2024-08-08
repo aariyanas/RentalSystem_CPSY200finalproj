@@ -2,41 +2,194 @@
 @using CPSY200RentalSystem.domain
 @using CPSY200RentalSystem.persistence
 
-@* 
+
 <main>
     <h3 id="mainTitle">Reports</h3>
     <br />
     <section id="container">
-        <h5><strong>Select Type of Report</strong></h5>
-        <select @bind="selectedReportToGen" name="Reports" id="ReportTypeSelector" class="results">
-            <option>Rentals by Customer</option>
-            <option>Rentals by Date</option>
-            <option>List Equipment by Category</option>
+        <h3>Select Type of Report</h3>
+        <select name="Reports" id="ReportTypeSelector" class="results" @onchange="SelectReportType">
+            <option value="none" selected></option>
+            <option value="byCustomer">Rentals by Customer</option>
+            <option value="byDate">Rentals by Date</option>
+            <option value="byCategory">List Equipment by Category</option>
         </select>
         <br />
-        <button class="btn btn-primary" @onclick="GenerateReport">Generate Report</button>
+        <button class="btn btn-primary" @onclick="() => GenerateReport(selectedReportToGen)">Generate Report</button>
+        @if (selectedReportToGen == "byCustomer")
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Rental ID</th>
+                        <th>Start Date</th>
+                        <th>Return Date</th>
+                        <th>Equipment</th>
+                        <th>Cost Per Day</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (KeyValuePair<Customer, List<Rental>> kvp in rentalsByCustomer)
+                    {
+                        @if (kvp.Value.Count() != 0)
+                        {
+                            <tr>
+                                <td>@kvp.Key.Customer_id: @kvp.Key.First_name @kvp.Key.Last_name</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        
+                        @if (kvp.Value.Count() != 0)
+                        {
+                            @foreach (Rental rental in kvp.Value)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@rental.Rental_id</td>
+                                    <td>@rental.Rental_date</td>
+                                    <td>@rental.Return_date</td>
+                                    <td>@rental.Equipment.Equipment_id: @rental.Equipment.Name</td>
+                                    <td>@rental.Equipment.Daily_rate</td>
+                                    <td>@rental.Cost</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else if (selectedReportToGen == "byDate")
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date of Return</th>
+                        <th>Rental ID</th>
+                        <th>Customer</th>
+                        <th>Equipment</th>
+                        <th>Cost Per Day</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (KeyValuePair<string, List<Rental>> kvp in rentalsByDate)
+                    {
+                        @if (kvp.Value.Count() != 0)
+                        {
+                            <tr>
+                                <td>@kvp.Key</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                        @if (kvp.Value.Count() != 0)
+                        {
+                            @foreach (Rental rental in kvp.Value)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@rental.Rental_id</td>
+                                    <td>@rental.Customer.Customer_id: @rental.Customer.First_name @rental.Customer.Last_name</td>
+                                    <td>@rental.Equipment.Equipment_id: @rental.Equipment.Name</td>
+                                    <td>@rental.Equipment.Daily_rate</td>
+                                    <td>@rental.Cost</td>
+                                </tr>
+
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else if (selectedReportToGen == "byCategory")
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Equipment</th>
+                        <th>Cost Per Day</th>
+                        <th>Stock Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (KeyValuePair<string, List<Equipment>> kvp in equipmentByCategory)
+                    {
+                        @if (kvp.Value.Count() != 0)
+                        {
+                            <tr>
+                                <td>@kvp.Key: @CategoryName(kvp.Key)</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @foreach (Equipment equipment in kvp.Value)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@equipment.Equipment_id: @equipment.Name</td>
+                                    <td>@equipment.Daily_rate</td>
+                                    <td>@equipment.StockLevel</td>
+                                </tr>
+                            }
+                        }
+                        else{}
+                    }
+                </tbody>
+            </table>
+        }
+        else { }
+
     </section>
 </main>
 
 
 @code {
-    public string selectedReportToGen;
-    public List<Rental> listToDisplay;
+    RentalSystem rentalSystem = new RentalSystem();
+    Dictionary<Customer, List<Rental>> rentalsByCustomer = new Dictionary<Customer, List<Rental>>();
+    Dictionary<string, List<Rental>> rentalsByDate = new Dictionary<string, List<Rental>>();
+    Dictionary<string, List<Equipment>> equipmentByCategory = new Dictionary<string, List<Equipment>>();
 
-    public string GenerateReport(selectedReportToGen)
+    string selectedReportToGen;
+
+
+    void SelectReportType(ChangeEventArgs e)
     {
-        if (selectedReportToGen == "Rentals by Customer")
-        {
-            listToDisplay = RentalSystem.ReportSalesByCust(selectedReportToGen);
-        }
-        else if (selectedReportToGen == "Rentals by Date")
-        {
-            listToDisplay = RentalSystem.ReportSalesByDate(selectedReportToGen);
-        }
-        else if (selecteddReportToGen == "List Equipment by Category")
-        {
-            listToDisplay = RentalSystem.ReportItemsByCategory(selectedReportToGen);
-        }
-        this.Display(listToDisplay);
+        selectedReportToGen = e.Value.ToString();
     }
-} *@
+
+    public void GenerateReport(string selectedReportToGen)
+    {
+        if (selectedReportToGen == "byCustomer")
+        {
+            rentalsByCustomer = RentalSystem.ReportSalesByCustomer();
+        }
+        else if (selectedReportToGen == "byDate")
+        {
+            rentalsByDate = RentalSystem.ReportSalesByDate();
+        }
+        else if (selectedReportToGen == "byCategory")
+        {
+            equipmentByCategory = RentalSystem.ReportEquipmentByCategory();
+
+        }
+        else { }
+    }
+
+    string CategoryName(string id)
+    {
+        string name = RentalSystem.Categories[id];
+        return name;
+    }
+
+}
