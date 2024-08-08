@@ -1,0 +1,7 @@
+1001,Doe,John,(555) 555-1212,jd@sample.net,none
+1002,Smith,Jane,(555) 555-3434,js@live.com,banned
+1003,Lee,Michael,(555) 555-5656,ml@sample.net,discount
+1004,fredd,fred,4003322333,daves@gmail.com,none
+1005,dasf,dasd,3344440020,daves@gmail.com,none
+1006,Jones,Fred,3334449999,fred@gmail.com,none
+1007,Jones,Fred,3332224444,fredj@gmail.com,none

@@ -54,7 +54,7 @@ namespace CPSY200RentalSystem.domain
         //.csv format
         public override string ToString()
         {
-            return $"{Rental_id},{Date},{Customer},{Equipment},{Rental_date},{Return_date},{Cost}";
+            return $"{Rental_id},{Date},{Customer.Customer_id},{Equipment.Equipment_id},{Rental_date},{Return_date},{Cost}";
         }
 
         public override bool Equals(object? obj)

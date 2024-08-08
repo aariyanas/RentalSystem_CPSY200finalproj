@@ -1,4 +1,4 @@
-﻿@page "/rentals"
+﻿@page "/rentalspage"
 @using CPSY200RentalSystem.domain
 @using CPSY200RentalSystem.persistence
 
@@ -63,7 +63,7 @@
                     <div class="radioOptionContainer">
                         <p class="resultsHeader">Results:</p>
                         <select class="results" @onchange="SelectRental">
-                            @foreach (Rental rental in displayRentals)
+                            @foreach (Rental rental in rentalList)
                             {
                                 <option value="@rental.Rental_id">Rental ID: @rental.Rental_id -- Customer: @rental.Customer.First_name[0].@rental.Customer.Last_name -- @rental.Equipment.Name</option>
                             }
@@ -98,10 +98,6 @@
                         <input id="returnDate" type="date" class="form-control" @onchange="Date2Change" placeholder="@returnDate" />
 
                     </div>
-                    <div>
-                        <label for="totalCost">Total Cost:</label>
-                        <input id="totalCost" type="number" class="form-control" placeholder="$@totalCost" disabled/>
-                    </div>
                 </form>
                 <div class="buttonContainer">
                     <div class="saveNDeletebuttons">
@@ -126,6 +122,10 @@
                             <option value="@equipment.Equipment_id">ID: @equipment.Equipment_id -- Name: @equipment.Name</option>
                         }
                     </select>
+                    @if (unavailableError == true)
+                    {
+                        <p class="error">This item is not available. Please select a different item.</p>
+                    }
                 </div>
                 <div>
                     <label for="creationDate">Current Date:</label>
@@ -145,10 +145,6 @@
                     <label for="totalCost">Daily Rate:</label>
                     <input id="totalCost" type="number" class="form-control" placeholder="$@equipmentRate" disabled />
                 </div>
-                <div>
-                    <label for="totalCost">Total Cost:</label>
-                    <input id="totalCost" type="number" class="form-control" placeholder="$@totalCost" disabled />
-                </div>
             </form>
             <h5 id="SectionTitle">Customer Details</h5>
             <form class="customerDetailsInput">
@@ -161,7 +157,7 @@
                     <input id="last" type="text" class="form-control" @bind="@lastName" />
                 </div>
                 <div>
-                    <label for="phone">Phone Number (Format (123) 123-1234):</label>
+                    <label for="phone">Phone Number:</label>
                     <input id="phone" type="tel" class="form-control" pattern="([0-9]{3}) [0-9]{3}-[0-9]{4}" @bind="@phoneNumber" />
                 </div>
                 <div>
@@ -203,6 +199,7 @@
     double equipmentRate;
     string selectedEquipmentId;
     Equipment selectedEquipement;
+    bool unavailableError = false;
 
     // Rental Variables
     string rentalId = "";
@@ -211,7 +208,6 @@
     string customerId = "";
     string rentalDate;
     string returnDate;
-    double totalCost;
     string selectedRentalId;
 
     // Customer Variables
@@ -248,7 +244,7 @@
     {
         buttonSelection = e.Value.ToString();
         StateHasChanged();
-    } 
+    }
 
     bool IsSelected(string option)
     {
@@ -269,7 +265,7 @@
     }
 
 
-    // Date Selection 
+    // Date Selection
     void Date1Change(ChangeEventArgs e)
     {
         if (DateTime.TryParse(e.Value?.ToString(), out var date))
@@ -282,10 +278,16 @@
         if (DateTime.TryParse(e.Value?.ToString(), out var date))
         {
             returnDate = date.ToString("yyyy-MM-dd");
+            if (rentalDate != null)
+            {
+                Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+                int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
+                double cost = totalDays * selectedEquipement.Daily_rate;
+            }
         }
-    }    
+    }
 
-    // Rental Selection 
+    // Rental Selection
     void SelectRental(ChangeEventArgs e)
     {
         selectedRentalId = e.Value.ToString();
@@ -318,17 +320,24 @@
     // Rental Creation
     void CreateRental()
     {
-        int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
-        double cost = totalDays * selectedEquipement.Daily_rate;
-        Customer customer = RentalSystem.CheckForCustomer(firstName, lastName, phoneNumber, email);
-        RentalSystem.CreateRental(currentDate, customer, selectedEquipement, rentalDate, returnDate, cost);
+        Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+        if (selectedEquipement.StockLevel > 0)
+        {
+            int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
+            double cost = totalDays * selectedEquipement.Daily_rate;
+            Customer customer = RentalSystem.CheckForCustomer(firstName, lastName, phoneNumber, email);
+            RentalSystem.CreateRental(currentDate, customer, selectedEquipement, rentalDate, returnDate, cost);
 
-        FileController.SaveRentals();
-        StateHasChanged();
-
+            FileController.Save();
+            Application.Current.MainPage.DisplayAlert("Rental Created", $"Customer ID: {customer.Customer_id}\nName: {customer.First_name} {customer.Last_name}\nEquipment: {selectedEquipement.Name} - {selectedEquipement.Equipment_id}\nReturn By: {returnDate}\n\nTOTAL: ${cost}", "OK");
+        }
+        else
+        {
+            unavailableError = true;
+        }
     }
 
-    // Rental Creation or Update 
+    // Rental Creation or Update
     void SaveRental()
     {
         if (selectedRentalId != null)
@@ -343,12 +352,12 @@
                 selectedRental.Return_date = returnDate;
                 int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
                 selectedRental.Cost = totalDays * selectedRental.Equipment.Daily_rate;
-                FileController.SaveRentals();
-                StateHasChanged();
+                FileController.Save();
+                Application.Current.MainPage.DisplayAlert("Rental Created", "Press OK to Continue", "OK");
             }
-            else {}
+            else { }
         }
-        else {}
+        else { }
     }
 
     // Rental Deletion
@@ -360,12 +369,15 @@
             if (selectedRental != null)
             {
                 rentalList.Remove(selectedRental);
-                FileController.SaveRentals();
-                StateHasChanged();
+                string equipmentNotUsed = null;
+                string customerNotUsed = null;
+                FileController.Delete(equipmentNotUsed, customerNotUsed, selectedRental.Rental_id);
+                FileController.Save();
+                Application.Current.MainPage.DisplayAlert("Rental Deleted", "Press OK to Continue", "OK");
             }
             else { }
         }
         else { }
     }
 }
-
+    

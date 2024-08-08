@@ -12,35 +12,46 @@ namespace CPSY200RentalSystem.persistence
 {
     public class FileController
     {
-        public static string equipmentFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\equipment.csv");
-        public static string customersFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\customers.csv");
-        public static string rentalFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\rentals.csv");
-        public static string categoryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\categories.csv");
+        public static string equipmentFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\equipment.txt");
+        public static string customersFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\customers.txt");
+        public static string rentalFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\rentals.txt");
+        public static string categoryFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\..\\..\\Resources\\Res\\categories.txt");
 
-        static Dictionary<int, Equipment> equipmentFromFile;  // using dictionaries to avoid duplicate items being added to the list everytime the page is loaded
-        static Dictionary<int, Customer> customersFromFile;
-        static Dictionary<int, Rental> rentalsFromFile;
-
+        static Dictionary<string, Equipment> equipmentFromFile = new Dictionary<string, Equipment>();  // using dictionaries to avoid duplicate items being added to the list everytime the page is loaded
+        static Dictionary<string, Customer> customersFromFile = new Dictionary<string, Customer>();
+        static Dictionary<string, Rental> rentalsFromFile = new Dictionary<string, Rental>();
+        
         public static void PopulateLists()
         {
+            List<Equipment> equipmentList = new List<Equipment>();
+            List<Customer> customerList = new List<Customer>();
+            List<Rental> rentalList = new List<Rental>();
+            Dictionary<string, string> categoryDictionary = new Dictionary<string, string>();
+
             // Handle Equipment CSV
             if (File.Exists(equipmentFilePath))
             {
                 string fileLines = File.ReadAllText(equipmentFilePath);
                 if (!string.IsNullOrEmpty(fileLines))
                 {
-                    Equipment equipment1;
                     foreach (string line in File.ReadAllLines(equipmentFilePath))
                     {
                         string[] parts = line.Split(",");
-                        equipment1 = new Equipment(parts[0], parts[1], parts[2], parts[3], double.Parse(parts[5]), int.Parse(parts[5]));
-                        equipmentFromFile.Add(int.Parse(parts[0]), equipment1);
+                        Equipment equipment1 = new Equipment(parts[0], parts[1], parts[2], parts[3], double.Parse(parts[4]), int.Parse(parts[5]));
+                        try
+                        {
+                            equipmentFromFile.Add(parts[0], equipment1);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
                     }
                 }
-                foreach (KeyValuePair<int, Equipment> kvp in equipmentFromFile)
+                foreach (KeyValuePair<string, Equipment> kvp in equipmentFromFile)
                 {
-                    RentalSystem.ListOfEquipment.Add(kvp.Value);
+                    equipmentList.Add(kvp.Value);
                 }
+                RentalSystem.ListOfEquipment = equipmentList;
             }
             else { }
 
@@ -51,18 +62,24 @@ namespace CPSY200RentalSystem.persistence
                 string fileLines = File.ReadAllText(customersFilePath);
                 if (!string.IsNullOrEmpty(fileLines))
                 {
-                    Customer customer1;
                     foreach (string line in File.ReadAllLines(customersFilePath))
                     {
                         string[] parts = line.Split(",");
-                        customer1 = new Customer(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
-                        customersFromFile.Add(int.Parse(parts[0]), customer1);
+                        Customer customer1 = new Customer(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
+                        try
+                        {
+                            customersFromFile.Add(parts[0], customer1);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
                     }
                 }
-                foreach (KeyValuePair<int, Customer> kvp in customersFromFile)
+                foreach (KeyValuePair<string, Customer> kvp in customersFromFile)
                 {
-                    RentalSystem.Customers.Add(kvp.Value);
+                    customerList.Add(kvp.Value);
                 }
+                RentalSystem.Customers = customerList;
             }
             else { }
 
@@ -73,23 +90,27 @@ namespace CPSY200RentalSystem.persistence
                 string fileLines = File.ReadAllText(rentalFilePath);
                 if (!string.IsNullOrEmpty(fileLines))
                 {
-                    Rental rental1;
-                    Customer customer;
-                    Equipment equipment;
                     foreach (string line in File.ReadAllLines(rentalFilePath))
                     {
                         string[] parts = line.Split(",");
-                        equipment = RentalSystem.SelectEquipment(parts[2]);
-                        customer = RentalSystem.GetCustomerViaCode(parts[3]);
+                        Customer customer = RentalSystem.Customers.Where(c => c.Customer_id == parts[2]).FirstOrDefault();
+                        Equipment equipment = RentalSystem.ListOfEquipment.Where(e => e.Equipment_id == parts[3]).FirstOrDefault();
 
-                        rental1 = new Rental(parts[0], parts[1], customer, equipment, parts[4], parts[5], double.Parse(parts[6]));
-                        rentalsFromFile.Add(int.Parse(parts[0]), rental1);
+                        Rental rental1 = new Rental(parts[0], parts[1], customer, equipment, parts[4], parts[5], double.Parse(parts[6]));
+                        try
+                        {
+                            rentalsFromFile.Add(parts[0], rental1);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
                     }
                 }
-                foreach (KeyValuePair<int, Rental> kvp in rentalsFromFile)
+                foreach (KeyValuePair<string, Rental> kvp in rentalsFromFile)
                 {
-                    RentalSystem.Rentals.Add(kvp.Value);
+                    rentalList.Add(kvp.Value);
                 }
+                RentalSystem.Rentals = rentalList;
             }
             else { }
 
@@ -102,49 +123,71 @@ namespace CPSY200RentalSystem.persistence
                     foreach (string line in File.ReadAllLines(categoryFilePath))
                     {
                         string[] parts = line.Split(",");
-                        RentalSystem.Categories.Add(int.Parse(parts[0]), parts[1]);
+                        try
+                        {
+                            categoryDictionary.Add(parts[0], parts[1]);
+                        }
+                        catch (Exception ex)
+                        {
+                        }
                     }
+                    RentalSystem.Categories = categoryDictionary;
                 }
             }
             else { }
-            // Ensure no duplicates using a dictionary
+
         }
 
-        public static void SaveEquipment()
+        public static void Save()
         {
-            List<string> saveToFile = new List<string>();
+            List<string> saveEquipmentToFile = new List<string>();
+            List<string> saveCustomersToFile = new List<string>();
+            List<string> saveRentalsToFile = new List<string>();
+            List<string> saveCategoriesToFile = new List<string>();
+
             foreach (Equipment equipment in RentalSystem.ListOfEquipment)
             {
-                saveToFile.Add(equipment.ToString());
+                saveEquipmentToFile.Add(equipment.ToString());
             }
-            File.WriteAllLines(equipmentFilePath, saveToFile);
-        }
-        public static void SaveCustomers()
-        {
-            List<string> saveToFile = new List<string>();
+            File.WriteAllLines(equipmentFilePath, saveEquipmentToFile);
+            
             foreach (Customer customer in RentalSystem.Customers)
             {
-                saveToFile.Add(customer.ToString());
+                saveCustomersToFile.Add(customer.ToString());
             }
-            File.WriteAllLines(customersFilePath, saveToFile);
-        }
-        public static void SaveRentals()
-        {
-            List<string> saveToFile = new List<string>();
+            File.WriteAllLines(customersFilePath, saveCustomersToFile);
+
             foreach (Rental rental in RentalSystem.Rentals)
             {
-                saveToFile.Add(rental.ToString());
+                saveRentalsToFile.Add(rental.ToString());
             }
-            File.WriteAllLines(rentalFilePath, saveToFile);
-        }
-        public static void SaveCategories()
-        {
-            List<string> saveToFile = new List<string>();
-            foreach (KeyValuePair<int, string> kvp in RentalSystem.Categories)
+            File.WriteAllLines(rentalFilePath, saveRentalsToFile);
+
+            foreach (KeyValuePair<string, string> kvp in RentalSystem.Categories)
             {
-                saveToFile.Add($"{kvp.Key},{kvp.Value}");
+                saveCategoriesToFile.Add($"{kvp.Key},{kvp.Value}");
             }
-            File.WriteAllLines(categoryFilePath, saveToFile);
+            File.WriteAllLines(categoryFilePath, saveCategoriesToFile);
+
         }
+
+        public static void Delete(string equipmentID, string customerID, string rentalID)
+        {
+            if (string.IsNullOrEmpty(customerID) && string.IsNullOrEmpty(rentalID))
+            {
+                equipmentFromFile.Remove(equipmentID);
+        
+        
+            }
+            else if (string.IsNullOrEmpty(equipmentID) && string.IsNullOrEmpty(rentalID))
+            {
+                customersFromFile.Remove(customerID);
+            }
+            else 
+            {
+                rentalsFromFile.Remove(rentalID);
+            }
+        }
+        
     }
 }

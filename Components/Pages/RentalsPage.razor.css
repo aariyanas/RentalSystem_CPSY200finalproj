@@ -65,3 +65,9 @@ form {
 .resultsHeader {
     font-weight: bold;
 }
+
+.error {
+    color: darkred;
+    font-weight: bold;
+    font-size: 45px;
+}

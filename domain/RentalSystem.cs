@@ -14,12 +14,12 @@ namespace CPSY200RentalSystem.domain
         static List<Equipment> listOfEquipment;
         static List<Customer> customers;
         static List<Rental> rentals;
-        static Dictionary<int, string> categories;
+        static Dictionary<string, string> categories;
 
         public static List<Equipment> ListOfEquipment { get => listOfEquipment; set => listOfEquipment = value; }
         public static List<Customer> Customers { get => customers; set => customers = value; }
         public static List<Rental> Rentals { get => rentals; set => rentals = value; }
-        public static Dictionary<int, string> Categories { get => categories; set => categories = value; }
+        public static Dictionary<string, string> Categories { get => categories; set => categories = value; }
 
         public RentalSystem() 
         { 
@@ -49,7 +49,7 @@ namespace CPSY200RentalSystem.domain
             // probably should save here  or in maui
         }
 
-        public static void AddCategory(int category_id, string categoryName)
+        public static void AddCategory(string category_id, string categoryName)
         {
             Categories.Add(category_id, categoryName);
 
@@ -127,18 +127,15 @@ namespace CPSY200RentalSystem.domain
 
         public static Equipment SelectEquipment(string code)
         {
-            return ListOfEquipment.FirstOrDefault(p => p.Equipment_id == code);
+            Equipment equipment = ListOfEquipment.Where(e => e.Equipment_id == code).FirstOrDefault();
+            return equipment;
         }
 
         public static Customer GetCustomerViaCode(string code)
         {
-            return Customers.FirstOrDefault(p => p.Customer_id == code);
+            Customer customer = Customers.Where(p => p.Customer_id == code).FirstOrDefault();
+            return customer;
         }
 
-        //.csv format
-        public override string ToString()
-        {
-            return $"{ListOfEquipment},{Customers},{Rentals},{Categories}";
-        }
     }
 }

@@ -38,6 +38,7 @@ namespace CPSY200RentalSystem.domain
             this.Last_name = last_name;
             this.First_name = first_name;
             this.Contact_phone = contact_phone;
+            this.Status = "none";
             this.Email = email;
         }
 
