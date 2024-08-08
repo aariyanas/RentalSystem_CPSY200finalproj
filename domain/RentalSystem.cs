@@ -33,11 +33,12 @@ namespace CPSY200RentalSystem.domain
             ListOfEquipment.Add(equipment);
             // probably should save here  or in maui
         }
-        public static void CreateCustomer(string last_name, string first_name, string contact_phone, string email, string status)
+        public static Customer CreateCustomer(string last_name, string first_name, string contact_phone, string email)
         {
             string customer_id = Customer.GenerateCustomerID();
-            Customer customer = new Customer(customer_id, last_name, first_name, contact_phone, email, status);
+            Customer customer = new Customer(customer_id, last_name, first_name, contact_phone, email);
             Customers.Add(customer);
+            return customer;
             // probably should save here or in maui
         }
         public static void CreateRental(string date, Customer customer, Equipment equipment, string rental_date, string return_date, double cost)
@@ -84,7 +85,7 @@ namespace CPSY200RentalSystem.domain
             return rentalsByCustomer;
         }
 
-        public static void CheckForCustomer(string last_name, string first_name, string contact_phone, string email, string status)
+        public static Customer CheckForCustomer(string first_name, string last_name, string contact_phone, string email)
         {
             Customer foundCustomer = Customers.Where(c => c.Last_name == last_name && c.Contact_phone == contact_phone && c.Email == email).FirstOrDefault();
             if (foundCustomer != null)
@@ -92,12 +93,12 @@ namespace CPSY200RentalSystem.domain
                 foundCustomer.Last_name = last_name;
                 foundCustomer.First_name = first_name;
                 foundCustomer.Contact_phone = contact_phone;
-                foundCustomer.Email = email;
-                foundCustomer.Status = status; 
+                foundCustomer.Email = email; 
+                return foundCustomer;
             }
             else
             {
-                CreateCustomer(last_name, first_name, contact_phone, email, status);
+                return CreateCustomer(last_name, first_name, contact_phone, email);
             }
         }
 

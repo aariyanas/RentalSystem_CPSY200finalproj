@@ -10,7 +10,7 @@
     {
         <section id="container">
             <section id="search">
-                <h5 id="SectionTitle">Search Inventory</h5>
+                <h5 id="SectionTitle">Search Rentals</h5>
                 <p>Select type of search to be performed</p>
                 <div class="radioContainer">
                     <form class="inputRadio">
@@ -27,13 +27,16 @@
                     <div class="radioOptionContainer">
                         <form>
                             <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
-                            <input type="text" id="employeeId" class="form-control" @bind="custIdInput">
+                            <input type="text" id="employeeId" class="form-control" @bind="@custIdInput">
                         </form>
                         <button class="btn btn-primary" @onclick="() => DisplayRental(custIdInput, notUsed)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
-                        <select class="results">
-                            <option>result1</option>
+                        <select class="results" @onchange="SelectRental">
+                            @foreach (Rental rental in displayRentals)
+                            {
+                                <option value="@rental.Rental_id">Rental ID: @rental.Rental_id -- Customer: @rental.Customer.First_name[0].@rental.Customer.Last_name -- @rental.Equipment.Name</option>
+                            }
                         </select>
                     </div>
                 }
@@ -42,13 +45,16 @@
                     <div class="radioOptionContainer">
                         <form>
                             <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
-                            <input type="text" id="employeeAll" class="form-control" @bind="custLastInput">
+                            <input type="text" id="employeeAll" class="form-control" @bind="@custLastInput">
                         </form>
                         <button class="btn btn-primary" @onclick="() => DisplayRental(notUsed, custLastInput)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
-                        <select class="results">
-                            <option>result1</option>
+                        <select class="results" @onchange="SelectRental">
+                            @foreach (Rental rental in displayRentals)
+                            {
+                                <option value="@rental.Rental_id">Rental ID: @rental.Rental_id -- Customer: @rental.Customer.First_name[0].@rental.Customer.Last_name -- @rental.Equipment.Name</option>
+                            }
                         </select>
                     </div>
                 }
@@ -57,7 +63,7 @@
                     <div class="radioOptionContainer">
                         <p class="resultsHeader">Results:</p>
                         <select class="results" @onchange="SelectRental">
-                            @foreach (Rental rental in rentalList)
+                            @foreach (Rental rental in displayRentals)
                             {
                                 <option value="@rental.Rental_id">Rental ID: @rental.Rental_id -- Customer: @rental.Customer.First_name[0].@rental.Customer.Last_name -- @rental.Equipment.Name</option>
                             }
@@ -68,34 +74,39 @@
 
             </section>
             <section id="addNedit">
-                <h5 id="SectionTitle">Rental Details</h5>
-                <p>Add, Update or Delete Inventory</p>
+                <h5 id="SectionTitle">Add or Update Rental</h5>
                 <form>
                     <div>
-                        <label for="inputID">Equipment ID:</label>
-                        <input id="inputID" type="text" class="form-control" />
+                        <label for="inputID">Rental ID:</label>
+                        <input id="inputID" type="text" class="form-control" placeholder="@rentalId" disabled />
                     </div>
                     <div>
-                        <label for="first">Category:</label>
-                        <input id="first" type="text" class="form-control" />
+                        <label for="creationDate">Date Created:</label>
+                        <input id="creationDate" type="text" class="form-control" placeholder="@creationDate" disabled />
                     </div>
                     <div>
-                        <label for="last">Name:</label>
-                        <input id="last" type="text" class="form-control" />
+                        <label for="custId">Customer ID:</label>
+                        <input id="custId" type="text" class="form-control" placeholder="@customerId" disabled />
                     </div>
                     <div>
-                        <label for="phone">Description:</label>
-                        <textarea id="phone" type="textarea" class="form-control" />
+                        <label for="rentalDate">Rental Date:</label>
+                        <input id="rentalDate" type="date" class="form-control" @onchange="Date1Change" placeholder="@rentalDate" />
+
                     </div>
                     <div>
-                        <label for="email">Daily Rental Cost:</label>
-                        <input id="email" type="number" class="form-control" placeholder="$" />
+                        <label for="returnDate">Return Date:</label>
+                        <input id="returnDate" type="date" class="form-control" @onchange="Date2Change" placeholder="@returnDate" />
+
+                    </div>
+                    <div>
+                        <label for="totalCost">Total Cost:</label>
+                        <input id="totalCost" type="number" class="form-control" placeholder="$@totalCost" disabled/>
                     </div>
                 </form>
                 <div class="buttonContainer">
-                    <div class="saveRemoveClear">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                    <div class="saveNDeletebuttons">
+                        <button type="submit" class="btn btn-primary" @onclick="SaveRental">Save</button>
+                        <button type="submit" class="btn btn-primary" @onclick="DeleteRental">Delete</button>
                     </div>
                 </div>
             </section>
@@ -104,21 +115,62 @@
     else
     {
         <section id="addNedit">
-            <h5 id="SectionTitle">Add Category</h5>
+            <h5 id="SectionTitle">Rental Details</h5>
+            
             <form>
                 <div>
-                    <label for="inputID2">Category ID:</label>
-                    <input id="inputID2" type="text" class="form-control" />
+                    <label for="inputID">Equipment ID:</label>
+                    <select class="results" @onchange="SelectEquipment">
+                        @foreach (Equipment equipment in equipmentList)
+                        {
+                            <option value="@equipment.Equipment_id">ID: @equipment.Equipment_id -- Name: @equipment.Name</option>
+                        }
+                    </select>
                 </div>
                 <div>
-                    <label for="first">Category Name:</label>
-                    <input id="first" type="text" class="form-control" />
+                    <label for="creationDate">Current Date:</label>
+                    <input id="creationDate" type="text" class="form-control" placeholder="@currentDate" disabled />
+                </div>
+                <div>
+                    <label for="rentalDate">Rental Date:</label>
+                    <input id="rentalDate" type="date" class="form-control" @onchange="Date1Change" placeholder="@rentalDate" />
+
+                </div>
+                <div>
+                    <label for="returnDate">Return Date:</label>
+                    <input id="returnDate" type="date" class="form-control" @onchange="Date2Change" placeholder="@returnDate" />
+
+                </div>
+                <div>
+                    <label for="totalCost">Daily Rate:</label>
+                    <input id="totalCost" type="number" class="form-control" placeholder="$@equipmentRate" disabled />
+                </div>
+                <div>
+                    <label for="totalCost">Total Cost:</label>
+                    <input id="totalCost" type="number" class="form-control" placeholder="$@totalCost" disabled />
                 </div>
             </form>
-            <div class="buttonContainer">
-                <div class="saveRemoveClear">
-                    <button type="submit" class="btn btn-primary">Add</button>
+            <h5 id="SectionTitle">Customer Details</h5>
+            <form class="customerDetailsInput">
+                <div>
+                    <label for="first">First Name:</label>
+                    <input id="first" type="text" class="form-control" @bind="@firstName" />
                 </div>
+                <div>
+                    <label for="last">Last Name:</label>
+                    <input id="last" type="text" class="form-control" @bind="@lastName" />
+                </div>
+                <div>
+                    <label for="phone">Phone Number (Format (123) 123-1234):</label>
+                    <input id="phone" type="tel" class="form-control" pattern="([0-9]{3}) [0-9]{3}-[0-9]{4}" @bind="@phoneNumber" />
+                </div>
+                <div>
+                    <label for="email">Email:</label>
+                    <input id="email" type="email" class="form-control" @bind="email" />
+                </div>
+            </form>
+            <div class="createButton">
+                <button type="submit" class="btn btn-primary" @onclick="CreateRental">Create Rental</button>
             </div>
         </section>
     }
@@ -136,79 +188,182 @@
 
     List<Rental> displayRentals = new List<Rental>(); // stores rentals that match the search
 
+    // Page variables
+    string menuButton = "createRental";
+    string saleButton = "inactive";
+
     // Menu variables
     string radioSelection = "";
     string buttonSelection = "";
-    string rentalId = "";
-    string currentDate = "";
-    string customerId = "";
-    string rentalDate = "";
-    string returnDate = "";
-    string totalCost = "";
-
     string custIdInput;
     string custLastInput;
     string notUsed = "none";
 
+    // Equipment Variables
+    double equipmentRate;
+    string selectedEquipmentId;
+    Equipment selectedEquipement;
+
+    // Rental Variables
+    string rentalId = "";
+    string creationDate;
+    string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+    string customerId = "";
+    string rentalDate;
+    string returnDate;
+    double totalCost;
     string selectedRentalId;
-    Rental selectedRental;
+
+    // Customer Variables
+    string firstName;
+    string lastName;
+    string phoneNumber;
+    string email;
+
+    // Change Page  -- Probably going to need to fix this
+    public void SwitchView()
+    {
+        if (menuButton == "updateRental")
+        {
+            StateHasChanged();
+            menuButton = "createRental";
+        }
+        else if (menuButton == "createRental")
+        {
+            StateHasChanged();
+            menuButton = "updateRental";
+        }
+        else { }
+    }
 
 
+    // Search Selection and Results
     void SelectRadio(ChangeEventArgs e)
     {
         radioSelection = e.Value.ToString();
         StateHasChanged();
     }
 
-
     void SelectButton(ChangeEventArgs e)
     {
         buttonSelection = e.Value.ToString();
         StateHasChanged();
-    }
+    } 
 
     bool IsSelected(string option)
     {
         return radioSelection == option;
-    }
-    string menuButton = "updateRental";
-    string saleButton = "inactive";
-
-    public void SwitchView()
-    {
-        if (menuButton == "updateRental")
-        {
-            menuButton = "createRental";
-        }
-        else
-        {
-            menuButton = "updateRental";
-        }
-    }
-
-    void SelectRental(ChangeEventArgs e)
-    {
-        selectedRentalId = e.Value.ToString();
-        if (selectedRentalId != null)
-        {
-         selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
-        //ERROR - COMMENTED OUT FOR NOW
-         // Code = selectedRental.Code = selectedRental
-        // = selectedRental
-        // = selectedRental
-         //= selectedRental.Cost;
-        }
     }
 
     void DisplayRental(string customerID, string lastName)
     {
         if (int.Parse(customerID) != 0)
         {
-
+            displayRentals = rentalList.Where(r => r.Customer.Customer_id == customerID).ToList();
         }
         else if (lastName != "none")
         {
+            displayRentals = rentalList.Where(r => r.Customer.Last_name == lastName).ToList();
+        }
+        else { }
+    }
 
+
+    // Date Selection 
+    void Date1Change(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var date))
+        {
+            rentalDate = date.ToString("yyyy-MM-dd");
+        }
+    }
+    void Date2Change(ChangeEventArgs e)
+    {
+        if (DateTime.TryParse(e.Value?.ToString(), out var date))
+        {
+            returnDate = date.ToString("yyyy-MM-dd");
+        }
+    }    
+
+    // Rental Selection 
+    void SelectRental(ChangeEventArgs e)
+    {
+        selectedRentalId = e.Value.ToString();
+        if (selectedRentalId != null)
+        {
+            Rental selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
+            rentalId = selectedRental.Rental_id;
+            creationDate = selectedRental.Date;
+            customerId = selectedRental.Customer.Customer_id;
+            rentalDate = selectedRental.Rental_date;
+            returnDate = selectedRental.Return_date;
+            totalCost = selectedRental.Cost;
+        }
+        else { }
+    }
+
+    // Equipment Selection
+    void SelectEquipment(ChangeEventArgs e)
+    {
+        selectedEquipmentId = e.Value.ToString();
+        if (selectedEquipmentId != null)
+        {
+            Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
+            equipmentRate = selectedEquipement.Daily_rate;
+        }
+        else { }
+    }
+
+
+    // Rental Creation
+    void CreateRental()
+    {
+        int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
+        double cost = totalDays * selectedEquipement.Daily_rate;
+        Customer customer = RentalSystem.CheckForCustomer(firstName, lastName, phoneNumber, email);
+        RentalSystem.CreateRental(currentDate, customer, selectedEquipement, rentalDate, returnDate, cost);
+
+        FileController.SaveRentals();
+        StateHasChanged();
+
+    }
+
+    // Rental Creation or Update 
+    void SaveRental()
+    {
+        if (selectedRentalId != null)
+        {
+            Rental selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
+            if (selectedRental != null)
+            {
+                selectedRental.Rental_id = rentalId;
+                selectedRental.Date = creationDate;
+                selectedRental.Customer.Customer_id = customerId;
+                selectedRental.Rental_date = rentalDate;
+                selectedRental.Return_date = returnDate;
+                int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
+                selectedRental.Cost = totalDays * selectedRental.Equipment.Daily_rate;
+                FileController.SaveRentals();
+                StateHasChanged();
+            }
+            else {}
+        }
+        else {}
+    }
+
+    // Rental Deletion
+    void DeleteRental()
+    {
+        if (selectedRentalId != null)
+        {
+            Rental selectedRental = rentalList.Where(r => r.Rental_id == selectedRentalId).FirstOrDefault();
+            if (selectedRental != null)
+            {
+                rentalList.Remove(selectedRental);
+                FileController.SaveRentals();
+                StateHasChanged();
+            }
+            else { }
         }
         else { }
     }

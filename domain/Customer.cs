@@ -32,6 +32,15 @@ namespace CPSY200RentalSystem.domain
 
         }
 
+        public Customer(string customer_id, string last_name, string first_name, string contact_phone, string email)
+        {
+            this.Customer_id = customer_id;
+            this.Last_name = last_name;
+            this.First_name = first_name;
+            this.Contact_phone = contact_phone;
+            this.Email = email;
+        }
+
         public Customer(string customer_id, string last_name, string first_name, string contact_phone, string email, string status)
         {
             this.Customer_id = customer_id;
