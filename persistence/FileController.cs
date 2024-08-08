@@ -37,6 +37,10 @@ namespace CPSY200RentalSystem.persistence
                         equipmentFromFile.Add(int.Parse(parts[0]), equipment1);
                     }
                 }
+                foreach (KeyValuePair<int, Equipment> kvp in equipmentFromFile)
+                {
+                    RentalSystem.ListOfEquipment.Add(kvp.Value);
+                }
             }
             else { }
 
@@ -54,6 +58,10 @@ namespace CPSY200RentalSystem.persistence
                         customer1 = new Customer(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5]);
                         customersFromFile.Add(int.Parse(parts[0]), customer1);
                     }
+                }
+                foreach (KeyValuePair<int, Customer> kvp in customersFromFile)
+                {
+                    RentalSystem.Customers.Add(kvp.Value);
                 }
             }
             else { }
@@ -78,6 +86,10 @@ namespace CPSY200RentalSystem.persistence
                         rentalsFromFile.Add(int.Parse(parts[0]), rental1);
                     }
                 }
+                foreach (KeyValuePair<int, Rental> kvp in rentalsFromFile)
+                {
+                    RentalSystem.Rentals.Add(kvp.Value);
+                }
             }
             else { }
 
@@ -96,18 +108,6 @@ namespace CPSY200RentalSystem.persistence
             }
             else { }
             // Ensure no duplicates using a dictionary
-            foreach (KeyValuePair<int, Equipment> kvp in equipmentFromFile)
-            {
-                RentalSystem.ListOfEquipment.Add(kvp.Value);
-            }
-            foreach (KeyValuePair<int, Customer> kvp in customersFromFile)
-            {
-                RentalSystem.Customers.Add(kvp.Value);
-            }
-            foreach (KeyValuePair<int, Rental> kvp in rentalsFromFile)
-            {
-                RentalSystem.Rentals.Add(kvp.Value);
-            }
         }
 
         public static void SaveEquipment()
