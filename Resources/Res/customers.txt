@@ -2,3 +2,6 @@
 1002,Smith,Jane,(555) 555-3434,js@live.com,banned
 1003,Lee,Michael,(555) 555-5656,ml@sample.net,discount
 1004,Brown,Keshia,4443909001,keshiabrwn@mail.ca,none
+1005,Turner,Carson,403-123-2134,carson@gmail.com,none
+1006,Turner,Daneil,403-213-4512,daniel@gmail.com,none
+1007,Turner,Carson,403-231-1234,carson@gmail.com,none

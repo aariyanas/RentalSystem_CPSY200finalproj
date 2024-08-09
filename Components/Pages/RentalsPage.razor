@@ -121,7 +121,7 @@
                     <select class="results" @onchange="SelectEquipment">
                         @foreach (Equipment equipment in equipmentList)
                         {
-                            <option value="@equipment.Equipment_id">ID: @equipment.Equipment_id -- Name: @equipment.Name</option>
+                            <option value="@equipment.Equipment_id">ID: @equipment.Equipment_id -- Name: @equipment.Name -- Cost: $@equipment.Daily_rate</option>
                         }
                     </select>
                     
@@ -140,10 +140,10 @@
                     <input id="returnDate" type="date" class="form-control" @onchange="Date2Change" placeholder="@returnDate" />
 
                 </div>
-                <div>
+@*                 <div>
                     <label for="totalCost">Daily Rate:</label>
                     <input id="totalCost" type="number" class="form-control" placeholder="$@equipmentRate" disabled />
-                </div>
+                </div> *@
             </form>
             <h5 id="SectionTitle">Customer Details</h5>
             <form class="customerDetailsInput">
@@ -317,8 +317,7 @@
     void CreateRental()
     {
         Equipment selectedEquipement = equipmentList.Where(e => e.Equipment_id == selectedEquipmentId).FirstOrDefault();
-        if (selectedRentalId != null && selectedRentalId != "none")
-        {
+        
             if (RentalSystem.CheckAvailabilty(selectedEquipement))
             {
                 int totalDays = (DateTime.Parse(returnDate) - DateTime.Parse(rentalDate)).Days + 1;
@@ -333,8 +332,6 @@
             {
                 unavailableError = true;
             }
-        }
-        else {}
         
     }
 
