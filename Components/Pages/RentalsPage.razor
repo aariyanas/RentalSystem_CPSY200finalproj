@@ -3,7 +3,7 @@
 @using CPSY200RentalSystem.persistence
 
 <main>
-    <h3 id="mainTitle">Manage Rentals</h3><br>
+    <h3 id="mainTitle">Manage Rentals</h3>
     <button type="button" id="EQCAT1" @onclick="SwitchView" class="btn btn-primary btn-block">Create</button>
     <button type="button" id="EQCAT2" @onclick="SwitchView" class="btn btn-primary btn-block">Update</button>
     @if (menuButton == "updateRental")
@@ -15,9 +15,9 @@
                 <div class="radioContainer">
                     <form class="inputRadio">
                         <input type="radio" id="radioID" name="radioOptions" value="customerID" check="@IsSelected("customerID")" @onchange="SelectRadio" />
-                        <label for="employeeID">Equipment ID</label><br>
+                        <label for="employeeID">Customer ID</label><br>
                         <input type="radio" id="radioLast" name="radioOptions" value="custLastName" check="@IsSelected("custLastName")" @onchange="SelectRadio" />
-                        <label for="radioLast">Category ID</label><br>
+                        <label for="radioLast">Customer Last Name</label><br>
                         <input type="radio" id="radioAll" name="radioOptions" value="displayAll" check="@IsSelected("displayAll")" @onchange="SelectRadio" />
                         <label for="radioAll">Display All</label><br>
                     </form>
@@ -26,7 +26,7 @@
                 {
                     <div class="radioOptionContainer">
                         <form>
-                            <label id="customerIDSection" for="employeeId">Enter Equipment ID:</label>
+                            <label id="customerIDSection" for="employeeId">Enter Customer ID:</label>
                             <input type="text" id="employeeId" class="form-control" @bind="@custIdInput">
                         </form>
                         <button class="btn btn-primary" @onclick="() => DisplayRental(custIdInput, notUsed)">Search</button>
@@ -45,7 +45,7 @@
                 {
                     <div class="radioOptionContainer">
                         <form>
-                            <label for="employeeLast" id="customerLastSection">Enter Category ID:</label>
+                            <label for="employeeLast" id="customerIDSection">Enter Customer Last Name:</label>
                             <input type="text" id="employeeAll" class="form-control" @bind="@custLastInput">
                         </form>
                         <button class="btn btn-primary" @onclick="() => DisplayRental(notUsed, custLastInput)">Search</button>
@@ -117,7 +117,7 @@
             
             <form>
                 <div>
-                    <label for="inputID">Equipment ID:</label>
+                    <label for="inputID">Rental ID:</label>
                     <select class="results" @onchange="SelectEquipment">
                         @foreach (Equipment equipment in equipmentList)
                         {
@@ -194,8 +194,8 @@
     // Menu variables
     string radioSelection = "";
     string buttonSelection = "";
-    string custIdInput = "none";
-    string custLastInput = "none";
+    string custIdInput;
+    string custLastInput;
     string notUsed = "none";
 
     // Equipment Variables

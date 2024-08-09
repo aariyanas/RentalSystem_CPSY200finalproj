@@ -4,8 +4,6 @@
 
 
 <main>
-    <h3 id="mainTitle">Reports</h3>
-    <br />
     <section id="container">
         <h3>Select Type of Report</h3>
         <select name="Reports" id="ReportTypeSelector" class="results" @onchange="SelectReportType">
@@ -27,7 +25,7 @@
                         <th>Return Date</th>
                         <th>Equipment</th>
                         <th>Cost Per Day</th>
-                        <th>Total</th>
+                        <th>Total Cost</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +34,7 @@
                         @if (kvp.Value.Count() != 0)
                         {
                             <tr>
-                                <td>@kvp.Key.Customer_id: @kvp.Key.First_name @kvp.Key.Last_name</td>
+                                <td>@kvp.Key.First_name @kvp.Key.Last_name</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -55,9 +53,9 @@
                                     <td>@rental.Rental_id</td>
                                     <td>@rental.Rental_date</td>
                                     <td>@rental.Return_date</td>
-                                    <td>@rental.Equipment.Equipment_id: @rental.Equipment.Name</td>
-                                    <td>@rental.Equipment.Daily_rate</td>
-                                    <td>@rental.Cost</td>
+                                    <td>@rental.Equipment.Name</td>
+                                    <td>$@rental.Equipment.Daily_rate</td>
+                                    <td>$@rental.Cost</td>
                                 </tr>
                             }
                         }
@@ -99,10 +97,10 @@
                                 <tr>
                                     <td></td>
                                     <td>@rental.Rental_id</td>
-                                    <td>@rental.Customer.Customer_id: @rental.Customer.First_name @rental.Customer.Last_name</td>
-                                    <td>@rental.Equipment.Equipment_id: @rental.Equipment.Name</td>
-                                    <td>@rental.Equipment.Daily_rate</td>
-                                    <td>@rental.Cost</td>
+                                    <td>@rental.Customer.First_name @rental.Customer.Last_name</td>
+                                    <td>@rental.Equipment.Name</td>
+                                    <td>$@rental.Equipment.Daily_rate</td>
+                                    <td>$@rental.Cost</td>
                                 </tr>
 
                             }
@@ -119,7 +117,7 @@
                         <th>Category</th>
                         <th>Equipment</th>
                         <th>Cost Per Day</th>
-                        <th>Stock Level</th>
+                        <th>Stock #</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,8 +135,8 @@
                             {
                                 <tr>
                                     <td></td>
-                                    <td>@equipment.Equipment_id: @equipment.Name</td>
-                                    <td>@equipment.Daily_rate</td>
+                                    <td>@equipment.Name</td>
+                                    <td>$@equipment.Daily_rate</td>
                                     <td>@equipment.StockLevel</td>
                                 </tr>
                             }

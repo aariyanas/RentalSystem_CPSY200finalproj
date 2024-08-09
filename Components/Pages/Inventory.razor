@@ -3,7 +3,7 @@
 @using CPSY200RentalSystem.persistence
 
 <main>
-    <h3 id="mainTitle">Manage Inventory</h3><br>
+    <h3 id="mainTitle">Manage Inventory</h3>
     <button type="button" id="EQCAT1" @onclick="SwitchView" class="btn btn-primary btn-block">Equipment</button>
     <button type="button" id="EQCAT2" @onclick="SwitchView" class="btn btn-primary btn-block">Categories</button>
     @if (menuButton == "displayEquipment")
@@ -26,10 +26,10 @@
             {
                     <div class="radioOptionContainer">
                         <form>
-                            <label id="equipmentIDSection" for="equipmentIdInput">Enter Equipment ID:</label>
+                            <label id="customerIDSection" for="equipmentIdInput">Enter Equipment ID:</label>
                             <input type="text" id="equipmentIdInput" class="form-control" @bind="@equipIdInput">
                         </form>
-                        <button class="btn btn-primary" @onclick="() => DisplayEquipment(equipIdInput, notUsed)">Search</button>  // change the multi parameter methods to sinlge and sort in method
+                        <button class="btn btn-primary" @onclick="() => DisplayEquipment(equipIdInput, notUsed)">Search</button>
                         <br>
                         <p class="resultsHeader">Results:</p>
                         <select class="results" @onchange="SelectEquipment">
@@ -45,7 +45,7 @@
             {
                     <div class="radioOptionContainer">
                         <form>
-                            <label id="categoryIDSection" for="categoryIdInput">Enter Category ID:</label>
+                            <label id="customerIDSection" for="categoryIdInput">Enter Category ID:</label>
                             <input type="text" id="categoryIdInput" class="form-control" @bind="@catIdInput">
                         </form>
                         <button class="btn btn-primary" @onclick="() => DisplayEquipment(notUsed, catIdInput)">Search</button>
